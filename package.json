@@ -1,6 +1,7 @@
 {
   "name": "http2-cli",
   "version": "0.0.0",
+  "description": "Modern command line HTTP/2 client",
   "author": "kevinpollet <pollet.kevin@gmail.com>",
   "license": "MIT",
   "keywords": [
