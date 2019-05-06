@@ -6,11 +6,11 @@
  */
 
 import yargs from "yargs";
-import http2 from "http2";
+import http2, { OutgoingHttpHeaders } from "http2";
 import { URL } from "url";
 import { printHeaders } from "./printHeaders";
 
-const { method, url } = yargs
+const { method, url, verbose, auth } = yargs
   .scriptName("http2")
   .showHelpOnFail(true)
   .command("$0 [method] <url>", "default command", yargs =>
@@ -18,11 +18,18 @@ const { method, url } = yargs
       .positional("method", {
         choices: ["get"],
         default: "get",
-        description: "The HTTP method",
         type: "string",
       })
       .positional("url", {
         type: "string",
+      })
+      .options({
+        verbose: {
+          type: "boolean",
+        },
+        auth: {
+          type: "string",
+        },
       })
   )
   .help()
@@ -30,9 +37,19 @@ const { method, url } = yargs
 
 const { origin, pathname } = new URL(url as string);
 const client = http2.connect(origin);
+const requestOptions: OutgoingHttpHeaders = {
+  ":method": (method as string).toUpperCase(),
+  ":path": pathname,
+};
+
+if (auth) {
+  requestOptions["Authorization"] = `Basic ${Buffer.from(auth).toString(
+    "base64"
+  )}`;
+}
 
 client
-  .request({ ":method": (method as string).toUpperCase(), ":path": pathname })
-  .on("response", headers => printHeaders(headers))
+  .request(requestOptions)
+  .on("response", headers => (verbose ? printHeaders(headers) : undefined))
   .on("data", data => process.stdout.write(data))
   .on("end", () => (client as any).close()); // eslint-disable-line
