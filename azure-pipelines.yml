@@ -1,20 +1,44 @@
-jobs:
-  - job: Build
-    pool:
-      vmImage: ubuntu-16.04
-    strategy:
-      matrix:
-        node_8_x:
-          node_version: 8.x
-        node_10_x:
-          node_version: 10.x
-        node_11_x:
-          node_version: 11.x
-        node_12_x:
-          node_version: 12.x
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: $(node_version)
-      - script: npm ci
-      - script: npm run build
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+      - refs/tags/*
+
+pr:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: ubuntu-16.04
+
+strategy:
+  matrix:
+    node8:
+      node_version: 8.x
+    node10:
+      node_version: 10.x
+    node11:
+      node_version: 11.x
+    node12:
+      node_version: 12.x
+
+steps:
+  - task: NodeTool@0
+    displayName: "Install Node.js"
+    inputs:
+      versionSpec: $(node_version)
+
+  - script: npm ci
+    displayName: "Install dependencies"
+
+  - script: npm run build
+    displayName: "Build"
+
+  - task: Npm@1
+    displayName: "Deploy to NPM Registry"
+    condition: and(succeeded(), eq(variables['node_version'], '12.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
+    inputs:
+      command: publish
+      publishEndpoint: "kevinpollet-npm-registry-connection"
