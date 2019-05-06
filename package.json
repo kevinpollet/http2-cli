@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Modern command line HTTP/2 client",
   "author": "kevinpollet <pollet.kevin@gmail.com>",
+  "homepage": "https://github.com/kevinpollet/http2-cli#readme",
+  "repository": "github:kevinpollet/http2-cli",
+  "bugs": "https://github.com/kevinpollet/http2-cli/issues",
   "license": "MIT",
   "keywords": [
     "http",
