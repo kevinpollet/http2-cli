@@ -12,6 +12,7 @@ import { formatHttpHeaders } from "./formatHttpHeaders";
 import { toOutgoingHeaders } from "./toOutgoingHeaders";
 import { emptyReadable } from "./emptyReadable";
 import { isErrorStatusCode } from "./isErrorStatusCode";
+import { AuthenticationType } from "./AuthenticationType";
 
 const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .scriptName("http2")
@@ -34,10 +35,10 @@ const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
         type: "string",
       })
       .option("auth-type", {
-        choices: ["basic", "bearer"],
-        default: "basic",
+        choices: [AuthenticationType.Basic, AuthenticationType.Bearer],
+        coerce: authType => authType as AuthenticationType,
+        default: AuthenticationType.Basic,
         description: "The authentication type",
-        type: "string",
       })
       .option("insecure", {
         description: "Disable the server certificate verification",

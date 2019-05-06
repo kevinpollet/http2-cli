@@ -6,10 +6,11 @@
  */
 
 import { OutgoingHttpHeaders } from "http2";
+import { AuthenticationType } from "./AuthenticationType";
 
-interface Options {
+interface Headers {
   auth?: {
-    type: string;
+    type: AuthenticationType;
     credentials: string;
   };
   method: string;
@@ -20,18 +21,14 @@ export const toOutgoingHeaders = ({
   auth,
   method,
   path,
-}: Options): OutgoingHttpHeaders => {
-  const headers: OutgoingHttpHeaders = {
-    ":method": method.toUpperCase(),
-    ":path": path,
-  };
-
-  if (auth) {
-    headers.authorization =
-      auth.type === "basic"
-        ? `Basic ${Buffer.from(auth.credentials).toString("base64")}`
-        : `Bearer ${auth.credentials}`;
-  }
-
-  return headers;
-};
+}: Headers): OutgoingHttpHeaders => ({
+  ":method": method,
+  ":path": path,
+  authorization:
+    auth &&
+    `${auth.type} ${
+      auth.type === AuthenticationType.Basic
+        ? Buffer.from(auth.credentials).toString("base64")
+        : auth.credentials
+    }`,
+});
