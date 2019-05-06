@@ -10,6 +10,7 @@ import http2 from "http2";
 import { URL } from "url";
 import { formatHttpHeaders } from "./formatHttpHeaders";
 import { toOutgoingHeaders } from "./toOutgoingHeaders";
+import { emptyReadable } from "./emptyReadable";
 
 const { method, url, verbose, auth, authType, insecure } = yargs
   .scriptName("http2")
@@ -46,7 +47,8 @@ const { method, url, verbose, auth, authType, insecure } = yargs
 const { origin, pathname: path } = new URL(url as string);
 
 http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
-  const stream = session.request(
+  const stdinStream = process.stdin.isTTY ? emptyReadable : process.stdin;
+  const http2Stream = session.request(
     toOutgoingHeaders({
       auth: auth ? { type: authType, credentials: auth } : undefined,
       method: method as string,
@@ -54,14 +56,14 @@ http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
     })
   );
 
-  process.stdin.pipe(stream);
-
-  stream
+  http2Stream
+    .on("end", () => session.destroy())
     .on("response", headers => {
       if (verbose) {
         process.stdout.write(formatHttpHeaders(headers));
       }
     })
-    .on("data", data => process.stdout.write(data))
-    .on("end", () => session.destroy());
+    .pipe(process.stdout);
+
+  stdinStream.pipe(http2Stream);
 });
