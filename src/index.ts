@@ -8,14 +8,16 @@
 import yargs from "yargs";
 import http2 from "http2";
 import { URL } from "url";
+import { printHeaders } from "./printHeaders";
 
 const { method, url } = yargs
   .scriptName("http2")
   .showHelpOnFail(true)
-  .command("$0 <method> <url>", "default command", yargs =>
+  .command("$0 [method] <url>", "default command", yargs =>
     yargs
       .positional("method", {
         choices: ["get"],
+        default: "get",
         description: "The HTTP method",
         type: "string",
       })
@@ -31,5 +33,6 @@ const client = http2.connect(origin);
 
 client
   .request({ ":method": (method as string).toUpperCase(), ":path": pathname })
-  .on("response", headers => JSON.stringify(headers))
-  .on("data", data => process.stdout.write(data));
+  .on("response", headers => printHeaders(headers))
+  .on("data", data => process.stdout.write(data))
+  .on("end", () => (client as any).close()); // eslint-disable-line
