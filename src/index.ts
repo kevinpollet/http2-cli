@@ -15,7 +15,6 @@ import { isErrorStatusCode } from "./isErrorStatusCode";
 import { AuthenticationType } from "./AuthenticationType";
 
 const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
-  .scriptName("http2")
   .showHelpOnFail(true)
   .help()
   .wrap(null)
