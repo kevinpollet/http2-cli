@@ -2,5 +2,32 @@
   "name": "http2-cli",
   "version": "0.0.0",
   "author": "kevinpollet <pollet.kevin@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf lib",
+    "format": "prettier --write '**/*.{ts,json,md,yml}' '!lib/**/*'"
+  },
+  "devDependencies": {
+    "@kevinpollet/tsconfig": "0.1.0",
+    "husky": "2.2.0",
+    "lint-staged": "8.1.6",
+    "prettier": "1.17.0",
+    "rimraf": "2.6.3",
+    "typescript": "3.4.5"
+  },
+  "prettier": {
+    "trailingComma": "es5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,json,md,yml}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
 }

@@ -1,0 +1,9 @@
+{
+  "extends": "@kevinpollet/tsconfig",
+  "compilerOptions": {
+    "declaration": false,
+    "rootDir": ".",
+    "outDir": "lib"
+  },
+  "include": ["src"]
+}
