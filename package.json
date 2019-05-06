@@ -3,6 +3,12 @@
   "version": "0.0.0",
   "author": "kevinpollet <pollet.kevin@gmail.com>",
   "license": "MIT",
+  "keywords": [
+    "http",
+    "http2",
+    "cli",
+    "command-line"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rimraf lib",
