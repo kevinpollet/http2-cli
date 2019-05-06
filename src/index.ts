@@ -20,7 +20,6 @@ const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .wrap(null)
   .command("$0 <method> <url>", "", yargs =>
     yargs
-      .parserConfiguration({ "dot-notation": true })
       .positional("method", {
         choices: ["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH"],
         coerce: (method: string) => method.toUpperCase(),
