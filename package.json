@@ -25,7 +25,8 @@
     "clean": "rimraf lib",
     "format": "prettier --write '**/*.{ts,json,md,yml,js}' '!lib/**/*'",
     "lint": "eslint 'src/**'",
-    "prebuild": "npm run clean && npm run lint"
+    "prebuild": "npm run clean && npm run lint",
+    "release": "np"
   },
   "dependencies": {
     "yargs": "13.2.2"
@@ -41,9 +42,14 @@
     "eslint-config-prettier": "4.2.0",
     "husky": "2.2.0",
     "lint-staged": "8.1.6",
+    "np": "5.0.1",
     "prettier": "1.17.0",
     "rimraf": "2.6.3",
     "typescript": "3.4.5"
+  },
+  "np": {
+    "publish": false,
+    "yarn": false
   },
   "eslintConfig": {
     "env": {
