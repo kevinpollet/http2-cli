@@ -16,36 +16,38 @@ import { isErrorStatusCode } from "./isErrorStatusCode";
 const { method, url, verbose, auth, authType, insecure } = yargs
   .scriptName("http2")
   .showHelpOnFail(true)
-  .command("$0 <method> <url>", "default command", yargs =>
+  .help()
+  .command("$0 <method> <url>", "", yargs =>
     yargs
       .positional("method", {
-        choices: ["delete", "get", "head", "options", "post", "put", "path"],
+        choices: ["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH"],
+        coerce: (method: string) => method.toUpperCase(),
         type: "string",
       })
       .positional("url", {
+        coerce: (url: string) => new URL(url),
+      })
+      .option("auth", {
+        description: "The authentication credentials",
         type: "string",
       })
-      .options({
-        auth: {
-          type: "string",
-        },
-        authType: {
-          choices: ["basic", "bearer"],
-          default: "basic",
-          type: "string",
-        },
-        insecure: {
-          type: "boolean",
-        },
-        verbose: {
-          type: "boolean",
-        },
+      .option("authType", {
+        choices: ["basic", "bearer"],
+        default: "basic",
+        description: "The authentication type",
+        type: "string",
       })
-  )
-  .help()
-  .version().argv;
+      .option("insecure", {
+        description: "Disable the server certificate verification",
+        type: "boolean",
+      })
+      .option("verbose", {
+        description: "Display the HTTP response headers",
+        type: "boolean",
+      })
+  ).argv;
 
-const { origin, pathname: path } = new URL(url as string);
+const { origin, pathname: path } = url as URL;
 
 http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
   const stdinStream = process.stdin.isTTY ? emptyReadable : process.stdin;
