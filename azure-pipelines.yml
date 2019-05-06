@@ -26,19 +26,19 @@ strategy:
 
 steps:
   - task: NodeTool@0
-    displayName: "Install Node.js"
+    displayName: Install Node.js
     inputs:
       versionSpec: $(node_version)
 
   - script: npm ci
-    displayName: "Install dependencies"
+    displayName: Install dependencies
 
   - script: npm run build
-    displayName: "Build"
+    displayName: Build
 
   - task: Npm@1
-    displayName: "Deploy to NPM Registry"
-    condition: and(succeeded(), eq(variables['node_version'], '12.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
+    displayName: Deploy to NPM Registry
+    condition: and(succeeded(), eq(variables['node_version'], '8.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
     inputs:
       command: publish
-      publishEndpoint: "kevinpollet-npm-registry-connection"
+      publishEndpoint: kevinpollet-npm-registry-connection
