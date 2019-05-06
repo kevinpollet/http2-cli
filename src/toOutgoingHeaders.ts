@@ -16,7 +16,7 @@ interface Options {
   path: string;
 }
 
-export const getOutgoingHeaders = ({
+export const toOutgoingHeaders = ({
   auth,
   method,
   path,

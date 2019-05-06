@@ -8,8 +8,8 @@
 import yargs from "yargs";
 import http2 from "http2";
 import { URL } from "url";
-import { formatIncomingHttpHeaders } from "./formatIncomingHttpHeaders";
-import { getOutgoingHeaders } from "./getOutgoingHeaders";
+import { formatHttpHeaders } from "./formatHttpHeaders";
+import { toOutgoingHeaders } from "./toOutgoingHeaders";
 
 const { method, url, verbose, auth, authType, insecure } = yargs
   .scriptName("http2")
@@ -47,7 +47,7 @@ const { origin, pathname: path } = new URL(url as string);
 
 http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
   const stream = session.request(
-    getOutgoingHeaders({
+    toOutgoingHeaders({
       auth: auth ? { type: authType, credentials: auth } : undefined,
       method: method as string,
       path,
@@ -57,11 +57,11 @@ http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
   process.stdin.pipe(stream);
 
   stream
-    .on("response", headers =>
-      verbose
-        ? process.stdout.write(formatIncomingHttpHeaders(headers))
-        : undefined
-    )
+    .on("response", headers => {
+      if (verbose) {
+        process.stdout.write(formatHttpHeaders(headers));
+      }
+    })
     .on("data", data => process.stdout.write(data))
     .on("end", () => session.destroy());
 });

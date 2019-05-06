@@ -6,10 +6,10 @@
  */
 
 import chalk from "chalk";
-import { IncomingHttpHeaders } from "http2";
+import { IncomingHttpHeaders, OutgoingHttpHeaders } from "http2";
 
-export const formatIncomingHttpHeaders = (
-  headers: IncomingHttpHeaders
+export const formatHttpHeaders = (
+  headers: IncomingHttpHeaders | OutgoingHttpHeaders
 ): string =>
   Object.entries(headers)
     .map(([header, value]) => `${chalk.magenta(header)}: ${value}`)
