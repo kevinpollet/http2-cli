@@ -11,6 +11,7 @@ import { URL } from "url";
 import { formatHttpHeaders } from "./formatHttpHeaders";
 import { toOutgoingHeaders } from "./toOutgoingHeaders";
 import { emptyReadable } from "./emptyReadable";
+import { isErrorStatusCode } from "./isErrorStatusCode";
 
 const { method, url, verbose, auth, authType, insecure } = yargs
   .scriptName("http2")
@@ -56,14 +57,22 @@ http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
     })
   );
 
-  http2Stream
-    .on("end", () => session.destroy())
-    .on("response", headers => {
-      if (verbose) {
-        process.stdout.write(formatHttpHeaders(headers));
-      }
-    })
-    .pipe(process.stdout);
+  http2Stream.on("response", headers => {
+    const statusCode = parseInt(headers[":status"] as string);
+    const isError = isErrorStatusCode(statusCode);
+    const outputStream = isErrorStatusCode ? process.stderr : process.stdout;
+
+    if (verbose) {
+      process.stdout.write(formatHttpHeaders(headers));
+    }
+
+    http2Stream
+      .on("end", () => {
+        session.destroy();
+        process.exit(isError ? 1 : 0);
+      })
+      .pipe(outputStream);
+  });
 
   stdinStream.pipe(http2Stream);
 });
