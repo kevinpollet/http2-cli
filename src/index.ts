@@ -10,7 +10,7 @@ import http2, { OutgoingHttpHeaders } from "http2";
 import { URL } from "url";
 import { printHeaders } from "./printHeaders";
 
-const { method, url, verbose, auth } = yargs
+const { method, url, verbose, auth, insecure } = yargs
   .scriptName("http2")
   .showHelpOnFail(true)
   .command("$0 [method] <url>", "default command", yargs =>
@@ -24,11 +24,14 @@ const { method, url, verbose, auth } = yargs
         type: "string",
       })
       .options({
-        verbose: {
-          type: "boolean",
-        },
         auth: {
           type: "string",
+        },
+        insecure: {
+          type: "boolean",
+        },
+        verbose: {
+          type: "boolean",
         },
       })
   )
@@ -36,7 +39,7 @@ const { method, url, verbose, auth } = yargs
   .version().argv;
 
 const { origin, pathname } = new URL(url as string);
-const client = http2.connect(origin);
+const client = http2.connect(origin, { rejectUnauthorized: !!insecure });
 const requestOptions: OutgoingHttpHeaders = {
   ":method": (method as string).toUpperCase(),
   ":path": pathname,
