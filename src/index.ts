@@ -24,10 +24,11 @@ const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
       .positional("method", {
         choices: ["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH"],
         coerce: (method: string) => method.toUpperCase(),
-        type: "string",
+        description: "The HTTP method",
       })
       .positional("url", {
         coerce: (url: string) => new URL(url),
+        description: "The HTTP URL to request",
       })
       .option("auth", {
         description: "The authentication credentials",
