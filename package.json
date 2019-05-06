@@ -29,6 +29,7 @@
     "release": "np"
   },
   "dependencies": {
+    "chalk": "2.4.2",
     "yargs": "13.2.2"
   },
   "devDependencies": {
@@ -37,7 +38,6 @@
     "@types/yargs": "13.0.0",
     "@typescript-eslint/eslint-plugin": "1.7.0",
     "@typescript-eslint/parser": "1.7.0",
-    "chalk": "2.4.2",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.2.0",
     "husky": "2.2.0",
