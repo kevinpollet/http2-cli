@@ -35,7 +35,7 @@ const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
       })
       .option("auth-type", {
         choices: [AuthenticationType.Basic, AuthenticationType.Bearer],
-        coerce: authType => authType as AuthenticationType,
+        coerce: (authType: string) => authType as AuthenticationType,
         default: AuthenticationType.Basic,
         description: "The authentication type",
       })
