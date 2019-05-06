@@ -13,12 +13,14 @@ import { toOutgoingHeaders } from "./toOutgoingHeaders";
 import { emptyReadable } from "./emptyReadable";
 import { isErrorStatusCode } from "./isErrorStatusCode";
 
-const { method, url, verbose, auth, authType, insecure } = yargs
+const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .scriptName("http2")
   .showHelpOnFail(true)
   .help()
+  .wrap(null)
   .command("$0 <method> <url>", "", yargs =>
     yargs
+      .parserConfiguration({ "dot-notation": true })
       .positional("method", {
         choices: ["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH"],
         coerce: (method: string) => method.toUpperCase(),
@@ -31,7 +33,7 @@ const { method, url, verbose, auth, authType, insecure } = yargs
         description: "The authentication credentials",
         type: "string",
       })
-      .option("authType", {
+      .option("auth-type", {
         choices: ["basic", "bearer"],
         default: "basic",
         description: "The authentication type",
