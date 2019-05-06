@@ -6,11 +6,12 @@
  */
 
 import yargs from "yargs";
-import http2, { OutgoingHttpHeaders } from "http2";
+import http2 from "http2";
 import { URL } from "url";
 import { printHeaders } from "./printHeaders";
+import { getOutgoingHeaders } from "./getOutgoingHeaders";
 
-const { method, url, verbose, auth, insecure } = yargs
+const { method, url, verbose, auth, authType, insecure } = yargs
   .scriptName("http2")
   .showHelpOnFail(true)
   .command("$0 [method] <url>", "default command", yargs =>
@@ -27,6 +28,11 @@ const { method, url, verbose, auth, insecure } = yargs
         auth: {
           type: "string",
         },
+        authType: {
+          choices: ["basic", "bearer"],
+          default: "basic",
+          type: "string",
+        },
         insecure: {
           type: "boolean",
         },
@@ -38,21 +44,18 @@ const { method, url, verbose, auth, insecure } = yargs
   .help()
   .version().argv;
 
-const { origin, pathname } = new URL(url as string);
-const client = http2.connect(origin, { rejectUnauthorized: !!insecure });
-const requestOptions: OutgoingHttpHeaders = {
-  ":method": (method as string).toUpperCase(),
-  ":path": pathname,
-};
+const { origin, pathname: path } = new URL(url as string);
 
-if (auth) {
-  requestOptions["Authorization"] = `Basic ${Buffer.from(auth).toString(
-    "base64"
-  )}`;
-}
-
-client
-  .request(requestOptions)
-  .on("response", headers => (verbose ? printHeaders(headers) : undefined))
-  .on("data", data => process.stdout.write(data))
-  .on("end", () => (client as any).close()); // eslint-disable-line
+http2.connect(origin, { rejectUnauthorized: !!insecure }, session =>
+  session
+    .request(
+      getOutgoingHeaders({
+        auth: auth ? { type: authType, credentials: auth } : undefined,
+        method,
+        path,
+      })
+    )
+    .on("response", headers => (verbose ? printHeaders(headers) : undefined))
+    .on("data", data => process.stdout.write(data))
+    .on("end", () => session.destroy())
+);
