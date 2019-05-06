@@ -14,11 +14,10 @@ import { getOutgoingHeaders } from "./getOutgoingHeaders";
 const { method, url, verbose, auth, authType, insecure } = yargs
   .scriptName("http2")
   .showHelpOnFail(true)
-  .command("$0 [method] <url>", "default command", yargs =>
+  .command("$0 <method> <url>", "default command", yargs =>
     yargs
       .positional("method", {
-        choices: ["get"],
-        default: "get",
+        choices: ["delete", "get", "head", "options", "post", "put", "path"],
         type: "string",
       })
       .positional("url", {
@@ -46,20 +45,23 @@ const { method, url, verbose, auth, authType, insecure } = yargs
 
 const { origin, pathname: path } = new URL(url as string);
 
-http2.connect(origin, { rejectUnauthorized: !!insecure }, session =>
-  session
-    .request(
-      getOutgoingHeaders({
-        auth: auth ? { type: authType, credentials: auth } : undefined,
-        method,
-        path,
-      })
-    )
+http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
+  const stream = session.request(
+    getOutgoingHeaders({
+      auth: auth ? { type: authType, credentials: auth } : undefined,
+      method: method as string,
+      path,
+    })
+  );
+
+  process.stdin.pipe(stream);
+
+  stream
     .on("response", headers =>
       verbose
         ? process.stdout.write(formatIncomingHttpHeaders(headers))
         : undefined
     )
     .on("data", data => process.stdout.write(data))
-    .on("end", () => session.destroy())
-);
+    .on("end", () => session.destroy());
+});
