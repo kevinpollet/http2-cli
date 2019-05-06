@@ -26,9 +26,13 @@
     "format": "prettier --write '**/*.{ts,json,md,yml,js}' '!lib/**/*'",
     "prebuild": "npm run clean"
   },
+  "dependencies": {
+    "yargs": "13.2.2"
+  },
   "devDependencies": {
     "@kevinpollet/tsconfig": "0.1.0",
     "@types/node": "8.10.48",
+    "@types/yargs": "13.0.0",
     "husky": "2.2.0",
     "lint-staged": "8.1.6",
     "prettier": "1.17.0",
