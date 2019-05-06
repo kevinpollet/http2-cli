@@ -2,8 +2,7 @@
   "extends": "@kevinpollet/tsconfig",
   "compilerOptions": {
     "declaration": false,
-    "rootDir": ".",
+    "rootDir": "src",
     "outDir": "lib"
-  },
-  "include": ["src"]
+  }
 }

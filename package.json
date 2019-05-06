@@ -13,13 +13,22 @@
     "cli",
     "command-line"
   ],
+  "bin": {
+    "http2": "bin/http2.js"
+  },
+  "files": [
+    "bin",
+    "lib"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rimraf lib",
-    "format": "prettier --write '**/*.{ts,json,md,yml}' '!lib/**/*'"
+    "format": "prettier --write '**/*.{ts,json,md,yml,js}' '!lib/**/*'",
+    "prebuild": "npm run clean"
   },
   "devDependencies": {
     "@kevinpollet/tsconfig": "0.1.0",
+    "@types/node": "8.10.48",
     "husky": "2.2.0",
     "lint-staged": "8.1.6",
     "prettier": "1.17.0",
@@ -35,7 +44,7 @@
     }
   },
   "lint-staged": {
-    "*.{ts,json,md,yml}": [
+    "*.{ts,json,md,yml,js}": [
       "prettier --write",
       "git add"
     ]
