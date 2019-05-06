@@ -26,10 +26,10 @@ const { method, url } = yargs
   .help()
   .version().argv;
 
-const { origin, pathname } = new URL(url!);
+const { origin, pathname } = new URL(url as string);
 const client = http2.connect(origin);
 
 client
-  .request({ ":method": method!.toUpperCase(), ":path": pathname })
+  .request({ ":method": (method as string).toUpperCase(), ":path": pathname })
   .on("response", headers => JSON.stringify(headers))
   .on("data", data => process.stdout.write(data));
