@@ -40,18 +40,12 @@ jobs:
         displayName: Archive build artifact
         condition: eq(variables['node_version'], '8.x')
         inputs:
-          archiveType: tar
-          archiveFile: $(Build.ArtifactStagingDirectory)/build-artifact.tar.gz
           includeRootFolder: false
           rootFolderOrFile: $(Build.SourcesDirectory)
-          tarCompression: gz
 
       - task: PublishBuildArtifacts@1
         displayName: Publish build artifact
         condition: eq(variables['node_version'], '8.x')
-        inputs:
-          pathtoPublish: $(Build.ArtifactStagingDirectory)
-          artifactName: BuildArtifact
 
   - job: Deploy
     dependsOn: Build
@@ -69,14 +63,16 @@ jobs:
       - task: DownloadBuildArtifacts@0
         displayName: Download build artifact
         inputs:
-          artifactName: BuildArtifact
-          downloadPath: $(Build.ArtifactStagingDirectory)
+          artifactName: drop
 
-      - script: tar -xzf $(Build.ArtifactStagingDirectory)/BuildArtifact/build-artifact.tar.gz -C $(Build.SourcesDirectory)
-        displayName: Extract build artifact
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: $(System.ArtifactsDirectory)/**/*.zip
+          destinationFolder: $(System.ArtifactsDirectory)/deploy
 
       - task: Npm@1
         displayName: Deploy to npm registry
         inputs:
           command: publish
           publishEndpoint: kevinpollet-npm-registry-connection
+          workingDir: $(System.ArtifactsDirectory)/deploy
