@@ -10,35 +10,73 @@ pr:
     include:
       - master
 
-pool:
-  vmImage: ubuntu-16.04
+jobs:
+  - job: Build
+    pool:
+      vmImage: ubuntu-16.04
+    strategy:
+      matrix:
+        node8:
+          node_version: 8.x
+        node10:
+          node_version: 10.x
+        node11:
+          node_version: 11.x
+        node12:
+          node_version: 12.x
+    steps:
+      - task: NodeTool@0
+        displayName: Install Node.js
+        inputs:
+          versionSpec: $(node_version)
 
-strategy:
-  matrix:
-    node8:
-      node_version: 8.x
-    node10:
-      node_version: 10.x
-    node11:
-      node_version: 11.x
-    node12:
-      node_version: 12.x
+      - script: npm ci
+        displayName: Install dependencies
 
-steps:
-  - task: NodeTool@0
-    displayName: Install Node.js
-    inputs:
-      versionSpec: $(node_version)
+      - script: npm run build
+        displayName: Build
 
-  - script: npm ci
-    displayName: Install dependencies
+      - task: ArchiveFiles@2
+        displayName: Archive build artifact
+        condition: eq(variables['node_version'], '8.x')
+        inputs:
+          archiveType: tar
+          archiveFile: $(Build.ArtifactStagingDirectory)/build-artifact.tar.gz
+          includeRootFolder: false
+          rootFolderOrFile: $(Build.SourcesDirectory)
+          tarCompression: gz
 
-  - script: npm run build
-    displayName: Build
+      - task: PublishBuildArtifacts@1
+        displayName: Publish build artifact
+        condition: eq(variables['node_version'], '8.x')
+        inputs:
+          pathtoPublish: $(Build.ArtifactStagingDirectory)
+          artifactName: BuildArtifact
 
-  - task: Npm@1
-    displayName: Deploy to NPM Registry
-    condition: and(succeeded(), eq(variables['node_version'], '8.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
-    inputs:
-      command: publish
-      publishEndpoint: kevinpollet-npm-registry-connection
+  - job: Deploy
+    dependsOn: Build
+    condition: and(succeeded('Build'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+      - checkout: none
+
+      - task: NodeTool@0
+        displayName: Install Node.js
+        inputs:
+          versionSpec: 8.x
+
+      - task: DownloadBuildArtifacts@0
+        displayName: Download build artifact
+        inputs:
+          artifactName: BuildArtifact
+          downloadPath: $(Build.ArtifactStagingDirectory)
+
+      - script: tar -xzf $(Build.ArtifactStagingDirectory)/BuildArtifact/build-artifact.tar.gz -C $(Build.SourcesDirectory)
+        displayName: Extract build artifact
+
+      - task: Npm@1
+        displayName: Deploy to npm registry
+        inputs:
+          command: publish
+          publishEndpoint: kevinpollet-npm-registry-connection
