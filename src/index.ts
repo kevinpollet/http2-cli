@@ -16,7 +16,14 @@ import { isErrorStatusCode } from "./isErrorStatusCode";
 import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
 
-const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
+const {
+  method,
+  url: { origin, pathname, search },
+  verbose,
+  auth,
+  "auth-type": authType,
+  insecure,
+} = yargs
   .showHelpOnFail(true)
   .help()
   .wrap(null)
@@ -28,10 +35,12 @@ const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
         coerce: (method: string) => method.toUpperCase(),
         description: "The HTTP method",
       })
+      .required("method")
       .positional("url", {
         coerce: (url: string) => new URL(url),
         description: "The HTTP URL to request",
       })
+      .required("url")
       .option("auth", {
         description: "The authentication credentials",
         type: "string",
@@ -52,15 +61,13 @@ const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
       })
   ).argv;
 
-const { origin, pathname: path } = url as URL;
-
 http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
   const stdinStream = process.stdin.isTTY ? emptyReadable : process.stdin;
   const http2Stream = session.request(
     toOutgoingHeaders({
       auth: auth ? { type: authType, credentials: auth } : undefined,
-      method: method as string,
-      path,
+      method,
+      path: `${pathname}${search}`,
     })
   );
 
