@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "chalk": "2.4.2",
+    "json-colorizer": "2.2.0",
     "pump": "3.0.0",
     "yargs": "13.2.2"
   },

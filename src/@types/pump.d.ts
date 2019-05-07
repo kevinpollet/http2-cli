@@ -6,10 +6,8 @@
  */
 
 declare module "pump" {
-  function pump(
+  export default function pump(
     readable: NodeJS.ReadableStream,
     writable: NodeJS.WritableStream
   ): NodeJS.WritableStream;
-
-  export = pump;
 }

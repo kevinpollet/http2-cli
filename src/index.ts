@@ -6,6 +6,7 @@
  */
 
 import yargs from "yargs";
+import jsonColorizer from "json-colorizer";
 import http2 from "http2";
 import { URL } from "url";
 import pump from "pump";
@@ -90,7 +91,7 @@ http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
       const outputStream = isErrorStatusCode ? process.stderr : process.stdout;
 
       if (verbose) {
-        process.stdout.write(formatHttpHeaders(headers));
+        process.stdout.write(formatHttpHeaders(headers) + "\n\n");
       }
 
       if (isError) {
@@ -98,7 +99,24 @@ http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
         process.exit(1);
       }
 
-      pump(http2Stream, outputStream);
+      if (
+        outputStream.isTTY &&
+        headers["content-type"] === "application/json"
+      ) {
+        const buffers: Buffer[] = [];
+        http2Stream
+          .on("data", chunk => buffers.push(chunk))
+          .on("end", () => {
+            process.stdout.write(
+              jsonColorizer(Buffer.concat(buffers).toString(), {
+                colors: { STRING_KEY: "blue" },
+              })
+            );
+            process.exit();
+          });
+      } else {
+        pump(http2Stream, outputStream);
+      }
     });
 
   pump(stdinStream, http2Stream);
