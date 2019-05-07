@@ -12,5 +12,11 @@ export const formatHttpHeaders = (
   headers: IncomingHttpHeaders | OutgoingHttpHeaders
 ): string =>
   Object.entries(headers)
-    .map(([header, value]) => `${chalk.magenta(header)}: ${value}`)
+    .map(([header, value]) => {
+      const formattedHeader = header.replace(
+        /[^-]+-?/g,
+        m => `${m[0].toUpperCase()}${m.slice(1)}`
+      );
+      return `${chalk.magenta(formattedHeader)}: ${value}`;
+    })
     .join("\n");
