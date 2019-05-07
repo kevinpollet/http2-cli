@@ -14,11 +14,13 @@ import { toOutgoingHeaders } from "./toOutgoingHeaders";
 import { emptyReadable } from "./emptyReadable";
 import { isErrorStatusCode } from "./isErrorStatusCode";
 import { AuthenticationType } from "./AuthenticationType";
+import { version } from "./version";
 
 const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .showHelpOnFail(true)
   .help()
   .wrap(null)
+  .version(version)
   .command("$0 <method> <url>", "", yargs =>
     yargs
       .positional("method", {
