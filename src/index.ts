@@ -24,7 +24,6 @@ const {
   "auth-type": authType,
   insecure,
 } = yargs
-  .showHelpOnFail(true)
   .help()
   .wrap(null)
   .version(version)
@@ -37,7 +36,16 @@ const {
       })
       .required("method")
       .positional("url", {
-        coerce: (url: string) => new URL(url),
+        coerce: (url: string) => {
+          const parsedURL = new URL(url);
+          if (
+            parsedURL.protocol === "https:" ||
+            parsedURL.protocol === "https"
+          ) {
+            return parsedURL;
+          }
+          throw new TypeError("Unsupported URL format");
+        },
         description: "The HTTP URL to request",
       })
       .required("url")
