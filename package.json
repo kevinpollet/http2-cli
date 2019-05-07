@@ -10,8 +10,11 @@
   "keywords": [
     "http",
     "http2",
+    "client",
     "cli",
-    "command-line"
+    "command-line",
+    "terminal",
+    "console"
   ],
   "bin": {
     "http2": "bin/http2.js"
