@@ -15,6 +15,7 @@ import { emptyReadable } from "./emptyReadable";
 import { isErrorStatusCode } from "./isErrorStatusCode";
 import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
+import { HttpMethod } from "./HttpMethod";
 
 const {
   method,
@@ -25,19 +26,39 @@ const {
   insecure,
 } = yargs
   .help()
-  .wrap(null)
+  .strict(true)
   .version(version)
+  .wrap(null)
+  .option("auth", {
+    description: "The authentication credentials",
+    requiresArg: true,
+    string: true,
+  })
+  .option("auth-type", {
+    choices: Object.keys(AuthenticationType),
+    coerce: arg => arg as AuthenticationType,
+    default: AuthenticationType.Basic,
+    description: "The authentication type",
+    requiresArg: true,
+  })
+  .option("insecure", {
+    description: "Disable the server certificate verification",
+    boolean: true,
+  })
+  .option("verbose", {
+    description: "Display the HTTP response headers",
+    boolean: true,
+  })
   .command("$0 <method> <url>", "", yargs =>
     yargs
       .positional("method", {
-        choices: ["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH"],
-        coerce: (method: string) => method.toUpperCase(),
+        choices: Object.keys(HttpMethod) as HttpMethod[],
+        coerce: (arg: string) => arg.toUpperCase() as HttpMethod,
         description: "The HTTP method",
       })
-      .required("method")
       .positional("url", {
-        coerce: (url: string) => {
-          const parsedURL = new URL(url);
+        coerce: (arg: string) => {
+          const parsedURL = new URL(arg);
           if (
             parsedURL.protocol === "https:" ||
             parsedURL.protocol === "https"
@@ -48,25 +69,7 @@ const {
         },
         description: "The HTTP URL to request",
       })
-      .required("url")
-      .option("auth", {
-        description: "The authentication credentials",
-        type: "string",
-      })
-      .option("auth-type", {
-        choices: [AuthenticationType.Basic, AuthenticationType.Bearer],
-        coerce: (authType: string) => authType as AuthenticationType,
-        default: AuthenticationType.Basic,
-        description: "The authentication type",
-      })
-      .option("insecure", {
-        description: "Disable the server certificate verification",
-        type: "boolean",
-      })
-      .option("verbose", {
-        description: "Display the HTTP response headers",
-        type: "boolean",
-      })
+      .demandOption(["method", "url"])
   ).argv;
 
 http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
