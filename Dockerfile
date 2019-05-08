@@ -12,10 +12,11 @@ RUN apk add --no-cache tini
 ENV NODE_ENV=production
 WORKDIR /http2-cli
 RUN chown -R node:node .
-USER node
 COPY package*.json ./
 RUN npm install
 COPY --from=build /build/lib lib/
 COPY --from=build /build/bin bin/
-ENTRYPOINT [ "/sbin/tini","--", "bin/http2.js"]
+RUN npm link
+USER node
+ENTRYPOINT [ "/sbin/tini","--", "http2"]
 CMD [ "--version" ]
