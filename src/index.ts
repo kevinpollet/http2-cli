@@ -62,7 +62,7 @@ const {
           const parsedURL = new URL(arg);
           if (
             parsedURL.protocol === "https:" ||
-            parsedURL.protocol === "https"
+            parsedURL.protocol === "http:"
           ) {
             return parsedURL;
           }
