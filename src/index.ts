@@ -86,7 +86,11 @@ makeRequest({
     if (outputStream.isTTY && headers["content-type"] === "application/json") {
       const buffers: Buffer[] = [];
       stream.on("data", buffers.push.bind(buffers)).on("end", () => {
-        outputStream.write(jsonColorizer(Buffer.concat(buffers).toString()));
+        outputStream.write(
+          jsonColorizer(Buffer.concat(buffers).toString(), {
+            colors: { STRING_KEY: "blue" },
+          })
+        );
         process.exit();
       });
     } else {
