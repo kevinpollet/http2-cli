@@ -88,7 +88,7 @@ http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
     .on("response", headers => {
       const statusCode = parseInt(headers[":status"] as string);
       const isError = isErrorStatusCode(statusCode);
-      const outputStream = isErrorStatusCode ? process.stderr : process.stdout;
+      const outputStream = isError ? process.stderr : process.stdout;
 
       if (verbose) {
         process.stdout.write(formatHttpHeaders(headers) + "\n\n");
