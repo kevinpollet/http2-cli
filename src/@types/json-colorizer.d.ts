@@ -22,5 +22,5 @@ declare module "json-colorizer" {
     readonly colors?: { [key in Token]?: string };
   }
 
-  export default function colorize(json: string, options: Options): string;
+  export default function colorize(json: string, options?: Options): string;
 }

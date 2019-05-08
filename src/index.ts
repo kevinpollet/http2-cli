@@ -7,25 +7,16 @@
 
 import yargs from "yargs";
 import jsonColorizer from "json-colorizer";
-import http2 from "http2";
 import { URL } from "url";
 import pump from "pump";
 import { formatHttpHeaders } from "./formatHttpHeaders";
-import { toOutgoingHeaders } from "./toOutgoingHeaders";
 import { emptyReadable } from "./emptyReadable";
-import { isErrorStatusCode } from "./isErrorStatusCode";
 import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
 import { HttpMethod } from "./HttpMethod";
+import { makeRequest } from "./makeRequest";
 
-const {
-  method,
-  url: { origin, pathname, search },
-  verbose,
-  auth,
-  "auth-type": authType,
-  insecure,
-} = yargs
+const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .help()
   .strict(true)
   .version(version)
@@ -73,51 +64,36 @@ const {
       .demandOption(["method", "url"])
   ).argv;
 
-http2.connect(origin, { rejectUnauthorized: !!insecure }, session => {
-  const stdinStream = process.stdin.isTTY ? emptyReadable : process.stdin;
-  const http2Stream = session.request(
-    toOutgoingHeaders({
-      auth: auth ? { type: authType, credentials: auth } : undefined,
-      method,
-      path: `${pathname}${search}`,
-    })
-  );
+const inputStream = process.stdin.isTTY ? emptyReadable : process.stdin;
 
-  http2Stream
-    .on("end", () => session.destroy())
-    .on("response", headers => {
-      const statusCode = parseInt(headers[":status"] as string);
-      const isError = isErrorStatusCode(statusCode);
-      const outputStream = isError ? process.stderr : process.stdout;
+makeRequest({
+  method,
+  url,
+  inputStream,
+  options: {
+    rejectUnauthorized: !!insecure,
+    auth: { type: authType, credentials: auth || "" },
+  },
+})
+  .then(({ headers, stream }) => {
+    const statusCode = parseInt(headers[":status"] as string);
+    const outputStream = statusCode >= 400 ? process.stderr : process.stdout;
 
-      if (verbose) {
-        process.stdout.write(formatHttpHeaders(headers) + "\n\n");
-      }
+    if (verbose) {
+      process.stdout.write(`${formatHttpHeaders(headers)}\n\n`);
+    }
 
-      if (isError) {
-        session.destroy();
-        process.exit(1);
-      }
-
-      if (
-        outputStream.isTTY &&
-        headers["content-type"] === "application/json"
-      ) {
-        const buffers: Buffer[] = [];
-        http2Stream
-          .on("data", chunk => buffers.push(chunk))
-          .on("end", () => {
-            process.stdout.write(
-              jsonColorizer(Buffer.concat(buffers).toString(), {
-                colors: { STRING_KEY: "blue" },
-              })
-            );
-            process.exit();
-          });
-      } else {
-        pump(http2Stream, outputStream);
-      }
-    });
-
-  pump(stdinStream, http2Stream);
-});
+    if (outputStream.isTTY && headers["content-type"] === "application/json") {
+      const buffers: Buffer[] = [];
+      stream.on("data", buffers.push.bind(buffers)).on("end", () => {
+        outputStream.write(jsonColorizer(Buffer.concat(buffers).toString()));
+        process.exit();
+      });
+    } else {
+      pump(stream, outputStream);
+    }
+  })
+  .catch((err: Error) => {
+    process.exit(1);
+    process.stderr.write(err.message);
+  });
