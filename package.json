@@ -1,7 +1,7 @@
 {
   "name": "http2-cli",
   "version": "1.0.0-alpha.2",
-  "description": "Modern command line HTTP/2 client",
+  "description": "Modern and lightweight CLI for HTTP/2",
   "author": "kevinpollet <pollet.kevin@gmail.com>",
   "homepage": "https://github.com/kevinpollet/http2-cli#readme",
   "repository": "github:kevinpollet/http2-cli",
