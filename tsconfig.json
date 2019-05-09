@@ -1,8 +1,7 @@
 {
-  "extends": "@kevinpollet/tsconfig",
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "declaration": false,
-    "rootDir": "src",
-    "outDir": "lib"
-  }
+    "rootDir": "."
+  },
+  "include": ["src", "test"]
 }

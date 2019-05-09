@@ -36,6 +36,9 @@ jobs:
       - script: npm run build
         displayName: Build
 
+      - script: npm test
+        displayName: Test
+
       - task: ArchiveFiles@2
         displayName: Archive build artifact
         condition: eq(variables['node_version'], '8.x')

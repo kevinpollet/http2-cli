@@ -24,12 +24,15 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "clean": "rimraf lib",
     "format": "prettier --write '**/*.{ts,json,md,yml,js}' '!lib/**/*'",
-    "lint": "eslint 'src/**'",
-    "prebuild": "npm run clean && npm run lint",
-    "release": "np"
+    "lint:src": "eslint 'src/**'",
+    "lint:test": "eslint 'test/**'",
+    "prebuild": "npm run clean && npm run lint:src",
+    "pretest": "npm run lint:test",
+    "release": "np",
+    "test": "jest test"
   },
   "dependencies": {
     "chalk": "2.4.2",
@@ -39,6 +42,7 @@
   },
   "devDependencies": {
     "@kevinpollet/tsconfig": "0.1.0",
+    "@types/jest": "24.0.12",
     "@types/node": "8.10.48",
     "@types/yargs": "13.0.0",
     "@typescript-eslint/eslint-plugin": "1.7.0",
@@ -46,11 +50,16 @@
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.2.0",
     "husky": "2.2.0",
+    "jest": "24.8.0",
     "lint-staged": "8.1.6",
     "np": "5.0.1",
     "prettier": "1.17.0",
     "rimraf": "2.6.3",
+    "ts-jest": "24.0.2",
     "typescript": "3.4.5"
+  },
+  "jest": {
+    "preset": "ts-jest"
   },
   "np": {
     "publish": false,
@@ -74,7 +83,17 @@
           "allowExpressions": "true"
         }
       ]
-    }
+    },
+    "overrides": [
+      {
+        "env": {
+          "jest": true
+        },
+        "files": [
+          "*.test.ts"
+        ]
+      }
+    ]
   },
   "prettier": {
     "trailingComma": "es5"
