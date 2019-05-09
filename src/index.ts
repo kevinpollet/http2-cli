@@ -5,17 +5,17 @@
  * found in the LICENSE.md file.
  */
 
-import yargs from "yargs";
 import jsonColorizer from "json-colorizer";
+import yargs from "yargs";
 import { URL } from "url";
 import { formatHttpHeaders } from "./formatHttpHeaders";
-import { emptyReadable } from "./emptyReadable";
 import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
 import { HttpMethod } from "./HttpMethod";
 import { makeRequest } from "./makeRequest";
 import { isHttpURL } from "./isHttpURL";
 import { streamToBuffer } from "./streamToBuffer";
+import { getStdin } from "./getStdin";
 
 const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .help()
@@ -61,18 +61,14 @@ const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
       .demandOption(["method", "url"])
   ).argv;
 
-const inputStream = process.stdin.isTTY ? emptyReadable : process.stdin;
-
-makeRequest({
-  method,
-  url,
-  inputStream,
-  options: {
-    rejectUnauthorized: !!insecure,
-    auth: { type: authType, credentials: auth },
-  },
-})
-  .then(({ headers, stream }) => {
+getStdin()
+  .pipe(
+    makeRequest(method, url, {
+      rejectUnauthorized: !!insecure,
+      auth: { type: authType, credentials: auth },
+    })
+  )
+  .on("response", function(this: NodeJS.ReadableStream, headers) {
     const statusCode = parseInt(headers[":status"] as string);
     const outputStream = statusCode >= 400 ? process.stderr : process.stdout;
 
@@ -81,7 +77,7 @@ makeRequest({
     }
 
     if (outputStream.isTTY && headers["content-type"] === "application/json") {
-      streamToBuffer(stream, ({ err, buffer }) => {
+      streamToBuffer(this, ({ err, buffer }) => {
         if (err) {
           process.stderr.write(err.message);
           process.exit(1);
@@ -91,10 +87,10 @@ makeRequest({
         }
       });
     } else {
-      stream.pipe(outputStream);
+      this.pipe(outputStream);
     }
   })
-  .catch((err: Error) => {
+  .on("error", (err: Error) => {
     process.stderr.write(err.message);
     process.exit(1);
   });

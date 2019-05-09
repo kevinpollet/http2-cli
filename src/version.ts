@@ -4,14 +4,13 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE.md file.
  */
-import fs from "fs";
+import { readFileSync } from "fs";
 import { resolve } from "path";
 
-const packageJSON = resolve(__dirname, "..", "package.json");
-const { name, version: packageVersion } = JSON.parse(
-  fs.readFileSync(packageJSON).toString()
-);
+const packageJSONPath = resolve(__dirname, "..", "package.json");
+const packageJSON = readFileSync(packageJSONPath).toString();
 
-export const version = `${name}/${packageVersion} ${process.platform}-${
-  process.arch
-} node-${process.version}`;
+const { platform, arch, version: nodeVersion } = process;
+const { name: packageName, version: packageVersion } = JSON.parse(packageJSON);
+
+export const version = `${packageName}/${packageVersion} ${platform}-${arch} node-${nodeVersion}`;
