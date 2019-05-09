@@ -19,7 +19,6 @@ export const makeRequest = (
   const auth = options.auth;
   const authCredentials =
     auth &&
-    auth.credentials &&
     (auth.type === AuthenticationType.Bearer
       ? auth.credentials
       : Buffer.from(auth.credentials).toString("base64"));

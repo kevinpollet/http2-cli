@@ -18,7 +18,14 @@ import { streamToBuffer } from "./streamToBuffer";
 import { getStdin } from "./getStdin";
 import { errorHandler } from "./errorHandler";
 
-const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
+const {
+  method,
+  url,
+  verbose,
+  auth: authCredentials,
+  "auth-type": authType,
+  insecure,
+} = yargs
   .help()
   .strict(true)
   .version(version)
@@ -66,7 +73,10 @@ getStdin()
   .pipe(
     makeRequest(method, url, {
       rejectUnauthorized: !!insecure,
-      auth: { type: authType, credentials: auth },
+      auth:
+        authCredentials && authType
+          ? { type: authType, credentials: authCredentials }
+          : undefined,
     })
   )
   .on("response", function(this: NodeJS.ReadableStream, headers) {

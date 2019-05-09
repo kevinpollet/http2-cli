@@ -10,7 +10,7 @@ import { AuthenticationType } from "./AuthenticationType";
 export interface RequestOptions {
   auth?: {
     type: AuthenticationType;
-    credentials?: string;
+    credentials: string;
   };
   rejectUnauthorized?: boolean;
 }
