@@ -16,6 +16,7 @@ import { makeRequest } from "./makeRequest";
 import { isHttpURL } from "./isHttpURL";
 import { streamToBuffer } from "./streamToBuffer";
 import { getStdin } from "./getStdin";
+import { errorHandler } from "./errorHandler";
 
 const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .help()
@@ -78,10 +79,7 @@ getStdin()
 
     if (outputStream.isTTY && headers["content-type"] === "application/json") {
       streamToBuffer(this)
-        .on("error", err => {
-          process.stderr.write(err.message);
-          process.exit(1);
-        })
+        .on("error", errorHandler)
         .on("end", buffer => {
           const options = { colors: { STRING_KEY: "blue" } };
           outputStream.write(jsonColorizer(buffer.toString(), options));
@@ -90,7 +88,4 @@ getStdin()
       this.pipe(outputStream);
     }
   })
-  .on("error", (err: Error) => {
-    process.stderr.write(err.message);
-    process.exit(1);
-  });
+  .on("error", errorHandler);

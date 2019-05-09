@@ -31,5 +31,7 @@ export const makeRequest = (
     authorization: auth && `${auth.type} ${authCredentials}`,
   });
 
-  return duplexStream.once("end", () => session.destroy());
+  return duplexStream
+    .once("error", () => session.destroy())
+    .once("end", () => session.destroy());
 };
