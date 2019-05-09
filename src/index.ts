@@ -74,7 +74,7 @@ getStdin()
     const outputStream = statusCode >= 400 ? process.stderr : process.stdout;
 
     if (verbose) {
-      process.stdout.write(`${httpHeadersToString(headers)}\n\n`);
+      process.stderr.write(`${httpHeadersToString(headers)}\n\n`);
     }
 
     if (outputStream.isTTY && headers["content-type"] === "application/json") {
