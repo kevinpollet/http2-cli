@@ -8,7 +8,6 @@
 import yargs from "yargs";
 import jsonColorizer from "json-colorizer";
 import { URL } from "url";
-import pump from "pump";
 import { formatHttpHeaders } from "./formatHttpHeaders";
 import { emptyReadable } from "./emptyReadable";
 import { AuthenticationType } from "./AuthenticationType";
@@ -16,6 +15,7 @@ import { version } from "./version";
 import { HttpMethod } from "./HttpMethod";
 import { makeRequest } from "./makeRequest";
 import { isHttpURL } from "./isHttpURL";
+import { streamToBuffer } from "./streamToBuffer";
 
 const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .help()
@@ -81,20 +81,20 @@ makeRequest({
     }
 
     if (outputStream.isTTY && headers["content-type"] === "application/json") {
-      const buffers: Buffer[] = [];
-      stream.on("data", buffers.push.bind(buffers)).on("end", () => {
-        outputStream.write(
-          jsonColorizer(Buffer.concat(buffers).toString(), {
-            colors: { STRING_KEY: "blue" },
-          })
-        );
-        process.exit();
+      streamToBuffer(stream, ({ err, buffer }) => {
+        if (err) {
+          process.stderr.write(err.message);
+          process.exit(1);
+        } else if (buffer) {
+          const options = { colors: { STRING_KEY: "blue" } };
+          outputStream.write(jsonColorizer(buffer.toString(), options));
+        }
       });
     } else {
-      pump(stream, outputStream);
+      stream.pipe(outputStream);
     }
   })
   .catch((err: Error) => {
-    process.exit(1);
     process.stderr.write(err.message);
+    process.exit(1);
   });

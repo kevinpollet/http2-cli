@@ -6,7 +6,6 @@
  */
 
 import http2, { OutgoingHttpHeaders } from "http2";
-import pump from "pump";
 import { URL } from "url";
 import { HttpMethod } from "./HttpMethod";
 import { AuthenticationType } from "./AuthenticationType";
@@ -49,7 +48,8 @@ export const makeRequest = ({
         authorization,
       });
 
-      pump(inputStream, stream)
+      inputStream
+        .pipe(stream)
         .once("response", headers => resolve({ headers, stream }))
         .once("error", err => {
           session.destroy();
