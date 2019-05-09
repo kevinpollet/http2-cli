@@ -5,7 +5,7 @@ $ npm install -g http2-cli
 $ http2 get https://nghttp2.org/httpbin/get --verbose
 ```
 
-👋 Since `npm@5.2.0` you can use `npx` to run a CLI tool without installing it globally, so you can use the following command:
+Since `npm@5.2.0` you can use `npx` to run a CLI tool without installing it globally, so you can use the following command:
 
 ```shell
 $ npx http2-cli get https://nghttp2.org/httpbin/get --verbose
