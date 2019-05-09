@@ -5,6 +5,5 @@
  * found in the LICENSE.md file.
  */
 
-describe("true", () => {
-  it("should be true", () => expect(true).toBeTruthy());
-});
+export const isHttpURL = (url: string): boolean =>
+  url.startsWith("http:") || url.startsWith("https:");

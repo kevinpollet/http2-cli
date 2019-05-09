@@ -15,6 +15,7 @@ import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
 import { HttpMethod } from "./HttpMethod";
 import { makeRequest } from "./makeRequest";
+import { isHttpURL } from "./isHttpURL";
 
 const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
   .help()
@@ -49,15 +50,11 @@ const { method, url, verbose, auth, "auth-type": authType, insecure } = yargs
         description: "The HTTP method",
       })
       .positional("url", {
-        coerce: (arg: string) => {
-          const parsedURL = new URL(arg);
-          if (
-            parsedURL.protocol === "https:" ||
-            parsedURL.protocol === "http:"
-          ) {
-            return parsedURL;
+        coerce: (url: string) => {
+          if (!isHttpURL(url)) {
+            throw new Error("Unsupported URL format");
           }
-          throw new TypeError("Unsupported URL format");
+          return new URL(url);
         },
         description: "The HTTP URL to request",
       })
