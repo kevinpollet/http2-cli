@@ -13,7 +13,7 @@ import { AuthenticationType } from "./AuthenticationType";
 interface Options {
   auth?: {
     type: AuthenticationType;
-    credentials: string;
+    credentials?: string;
   };
   rejectUnauthorized?: boolean;
 }
@@ -36,8 +36,9 @@ export const makeRequest = ({
 }): Promise<Response> =>
   new Promise((resolve, reject) => {
     http2.connect(url, session => {
-      const authorization =
+      const authCredentials =
         options.auth &&
+        options.auth.credentials &&
         (options.auth.type === AuthenticationType.Bearer
           ? options.auth.credentials
           : Buffer.from(options.auth.credentials).toString("base64"));
@@ -45,7 +46,8 @@ export const makeRequest = ({
       const stream = session.request({
         ":method": method,
         ":path": url.pathname + url.search,
-        authorization,
+        authorization:
+          options.auth && `${options.auth.type} ${authCredentials}`,
       });
 
       inputStream

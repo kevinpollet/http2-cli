@@ -69,7 +69,7 @@ makeRequest({
   inputStream,
   options: {
     rejectUnauthorized: !!insecure,
-    auth: { type: authType, credentials: auth || "" },
+    auth: { type: authType, credentials: auth },
   },
 })
   .then(({ headers, stream }) => {
