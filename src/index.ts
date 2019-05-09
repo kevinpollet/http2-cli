@@ -8,7 +8,7 @@
 import jsonColorizer from "json-colorizer";
 import yargs from "yargs";
 import { URL } from "url";
-import { formatHttpHeaders } from "./formatHttpHeaders";
+import { httpHeadersToString } from "./httpHeadersToString";
 import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
 import { HttpMethod } from "./HttpMethod";
@@ -73,19 +73,19 @@ getStdin()
     const outputStream = statusCode >= 400 ? process.stderr : process.stdout;
 
     if (verbose) {
-      process.stdout.write(`${formatHttpHeaders(headers)}\n\n`);
+      process.stdout.write(`${httpHeadersToString(headers)}\n\n`);
     }
 
     if (outputStream.isTTY && headers["content-type"] === "application/json") {
-      streamToBuffer(this, ({ err, buffer }) => {
-        if (err) {
+      streamToBuffer(this)
+        .on("error", err => {
           process.stderr.write(err.message);
           process.exit(1);
-        } else if (buffer) {
+        })
+        .on("end", buffer => {
           const options = { colors: { STRING_KEY: "blue" } };
           outputStream.write(jsonColorizer(buffer.toString(), options));
-        }
-      });
+        });
     } else {
       this.pipe(outputStream);
     }
