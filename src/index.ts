@@ -80,22 +80,22 @@ getStdin()
     })
   )
   .on("response", function(this: NodeJS.ReadableStream, headers) {
-    const statusCode = parseInt(headers[":status"] as string);
-    const outputStream = statusCode >= 400 ? process.stderr : process.stdout;
-
     if (verbose) {
       process.stderr.write(`${httpHeadersToString(headers)}\n\n`);
     }
 
-    if (outputStream.isTTY && headers["content-type"] === "application/json") {
+    if (
+      process.stdout.isTTY &&
+      headers["content-type"] === "application/json"
+    ) {
       streamToBuffer(this)
         .on("error", errorHandler)
         .on("end", buffer => {
           const options = { colors: { STRING_KEY: "blue" } };
-          outputStream.write(jsonColorizer(buffer.toString(), options));
+          process.stdout.write(jsonColorizer(buffer.toString(), options));
         });
     } else {
-      this.pipe(outputStream);
+      this.pipe(process.stdout);
     }
   })
   .on("error", errorHandler);
