@@ -8,7 +8,7 @@
 $ npm install -g http2-cli
 ```
 
-Since `npm@5.2.0`, a new package runner tool called [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b). With this new tool you can run any node package binary from the command line without installing it globally first. So you can run `http2-cli` with the following command line:
+Since version `5.2.0`, a new package runner tool called [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) is shipped with npm. With this new tool you can run any node package binary from the command line without installing it globally first. So you can run `http2-cli` with the following command line:
 
 ```shell
 $ npx http2-cli --help
