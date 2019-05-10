@@ -57,7 +57,7 @@ const {
       .positional("method", {
         choices: Object.keys(HttpMethod) as HttpMethod[],
         coerce: (arg: string) => arg.toUpperCase() as HttpMethod,
-        description: "The HTTP method",
+        description: "HTTP method",
       })
       .positional("url", {
         coerce: (url: string) => {
@@ -66,7 +66,7 @@ const {
           }
           return new URL(url);
         },
-        description: "The HTTP URL to request",
+        description: "HTTP URL to request",
       })
       .positional("headers", {
         coerce: (arg: string[]) =>
@@ -83,7 +83,7 @@ const {
               {}
             ),
         description:
-          "The HTTP headers to send with the request, e.g. Content-Type: application/json",
+          "HTTP headers to send with the request, e.g. Content-Type: application/json",
       })
       .demandOption(["method", "url"])
   ).argv;
