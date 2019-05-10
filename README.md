@@ -23,11 +23,12 @@ $ npx http2-cli --help
 ## Usage
 
 ```shell
-http2 <method> <url>
+http2 <method> <url> [headers..]
 
 Positionals:
-  method  The HTTP method  [required] [choices: "DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATH"]
-  url     The HTTP URL to request  [required]
+  method   HTTP method  [required] [choices: "DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATH"]
+  url      HTTP URL to request  [required]
+  headers  HTTP headers to send with the request, e.g. Content-Type: application/json
 
 Options:
   --help       Show help  [boolean]
@@ -71,13 +72,14 @@ $ http2 get https://nghttp2.org:443/httpbin/basic-auth/test/test --auth test:tes
 ### POST request with redirected input
 
 ```shell
-$ http2 post https://nghttp2.org:443/httpbin/post < foo.json
+$ http2 post https://nghttp2.org:443/httpbin/post Content-Type:application/json < foo.json
 {
   "args": {},
   "data": "{\n  \"bar\": \"baz\"\n}\n",
   "files": {},
   "form": {},
   "headers": {
+    "Content-Type": "application/json",
     "Host": "nghttp2.org:443",
     "Transfer-Encoding": "chunked"
   },
