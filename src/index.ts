@@ -88,17 +88,17 @@ const {
       .demandOption(["method", "url"])
   ).argv;
 
+const requestOptions = {
+  headers,
+  rejectUnauthorized: !!insecure,
+  auth: authCredentials
+    ? { type: authType, credentials: authCredentials }
+    : undefined,
+};
+
 getStdin()
-  .pipe(
-    makeRequest(method, url, {
-      auth:
-        authCredentials && authType
-          ? { type: authType, credentials: authCredentials }
-          : undefined,
-      headers,
-      rejectUnauthorized: !!insecure,
-    })
-  )
+  .pipe(makeRequest(method, url, requestOptions))
+  .on("error", errorHandler)
   .on("response", function(this: NodeJS.ReadableStream, headers) {
     if (verbose) {
       process.stderr.write(`${httpHeadersToString(headers)}\n\n`);
@@ -117,5 +117,4 @@ getStdin()
     } else {
       this.pipe(process.stdout);
     }
-  })
-  .on("error", errorHandler);
+  });
