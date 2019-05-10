@@ -78,7 +78,7 @@ $ http2 post https://nghttp2.org:443/httpbin/post Content-Type:application/json 
 
 ## Docker
 
-For docker ❤️ you can run `http-cli` with docker. Currently, you'll have to build the docker image from the sources or to build your custom image. Here are the commands to build and run `http-cli` with docker:
+For docker ❤️ you can run `http2-cli` with docker. Currently, you'll have to build the docker image from the sources or to build your custom image. Here are the commands to build and run `http2-cli` with docker:
 
 ```shell
 $ git clone git@github.com:kevinpollet/http2-cli.git; cd http2-cli
