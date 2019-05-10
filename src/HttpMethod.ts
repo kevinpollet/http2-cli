@@ -12,5 +12,5 @@ export enum HttpMethod {
   OPTIONS = "OPTIONS",
   POST = "POST",
   PUT = "PUT",
-  PATH = "PATCH",
+  PATCH = "PATCH",
 }
