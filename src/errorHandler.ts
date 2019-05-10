@@ -6,6 +6,6 @@
  */
 
 export const errorHandler = (err: Error): void => {
-  process.stderr.write(`Error: ${err.message}`);
+  process.stderr.write(`Error: ${err.message}\n`);
   process.exit(1);
 };
