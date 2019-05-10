@@ -41,14 +41,14 @@ jobs:
 
       - task: ArchiveFiles@2
         displayName: Archive build artifact
-        condition: eq(variables['node_version'], '8.x')
+        condition: and(eq(variables['node_version'], '8.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
         inputs:
           includeRootFolder: false
           rootFolderOrFile: $(Build.SourcesDirectory)
 
       - task: PublishBuildArtifacts@1
         displayName: Publish build artifact
-        condition: eq(variables['node_version'], '8.x')
+        condition: and(eq(variables['node_version'], '8.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
 
   - job: Deploy
     dependsOn: Build
