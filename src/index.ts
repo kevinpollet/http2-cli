@@ -39,7 +39,10 @@ const {
   })
   .option("auth-type", {
     choices: Object.keys(AuthenticationType),
-    coerce: arg => arg as AuthenticationType,
+    coerce: (arg: string) => {
+      const normalizedArg = arg[0].toUpperCase() + arg.slice(1).toLowerCase();
+      return normalizedArg as AuthenticationType;
+    },
     default: AuthenticationType.Basic,
     description: "Specify the authentication mechanism",
     requiresArg: true,
