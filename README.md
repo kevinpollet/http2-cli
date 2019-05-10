@@ -34,8 +34,8 @@ Positionals:
 Options:
   --help       Show help  [boolean]
   --version    Show version number  [boolean]
-  --auth       The authentication credentials  [string]
-  --auth-type  The authentication type  [choices: "Basic", "Bearer"] [default: "Basic"]
+  --auth       Authentication credentials  [string]
+  --auth-type  Authentication type  [choices: "Basic", "Bearer"] [default: "Basic"]
   --insecure   Disable the server certificate verification  [boolean]
   --verbose    Display the HTTP response headers  [boolean]
 ```

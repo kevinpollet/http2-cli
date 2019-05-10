@@ -33,7 +33,7 @@ const {
   .version(version)
   .wrap(null)
   .option("auth", {
-    description: "The authentication credentials",
+    description: "Authentication credentials",
     requiresArg: true,
     string: true,
   })
@@ -41,7 +41,7 @@ const {
     choices: Object.keys(AuthenticationType),
     coerce: arg => arg as AuthenticationType,
     default: AuthenticationType.Basic,
-    description: "The authentication type",
+    description: "Authentication type",
     requiresArg: true,
   })
   .option("insecure", {
