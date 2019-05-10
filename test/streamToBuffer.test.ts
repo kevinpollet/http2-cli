@@ -9,7 +9,7 @@ import { Readable } from "stream";
 import { streamToBuffer } from "../src/streamToBuffer";
 
 describe("streamToBuffer", () => {
-  it("should emit an end event with the corresponding buffer", done => {
+  it("should emit an end event with the corresponding Buffer", done => {
     const data = "dummy";
     const readable = new Readable({
       read() {

@@ -30,7 +30,7 @@
     "lint:src": "eslint 'src/**'",
     "lint:test": "eslint 'test/**'",
     "prebuild": "npm run clean && npm run lint:src",
-    "pretest": "npm run lint:test",
+    "pretest": "npm run clean lint:test",
     "release": "np",
     "test": "jest test --coverage --collectCoverageFrom='src/**' --collectCoverageFrom='!src/@types/**'"
   },

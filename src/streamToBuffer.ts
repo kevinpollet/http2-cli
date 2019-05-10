@@ -14,14 +14,8 @@ export const streamToBuffer = (
 
   readable
     .on("error", err => eventEmitter.emit("error", err))
-    .on("end", function(this: NodeJS.ReadableStream) {
-      eventEmitter.emit("end", Buffer.concat(buffers));
-    })
-    .on("data", (data: string | Buffer) =>
-      typeof data === "string"
-        ? buffers.push(Buffer.from(data))
-        : buffers.push(data)
-    );
+    .on("end", () => eventEmitter.emit("end", Buffer.concat(buffers)))
+    .on("data", (data: string | Buffer) => buffers.push(Buffer.from(data)));
 
   return eventEmitter;
 };
