@@ -17,14 +17,16 @@ import { isHttpURL } from "./isHttpURL";
 import { streamToBuffer } from "./streamToBuffer";
 import { getStdin } from "./getStdin";
 import { errorHandler } from "./errorHandler";
+import { HttpHeaders } from "./HttpHeaders";
 
 const {
-  method,
-  url,
-  verbose,
   auth: authCredentials,
   "auth-type": authType,
   insecure,
+  headers,
+  method,
+  url,
+  verbose,
 } = yargs
   .help()
   .strict(true)
@@ -50,7 +52,7 @@ const {
     description: "Display the HTTP response headers",
     boolean: true,
   })
-  .command("$0 <method> <url>", "", yargs =>
+  .command("$0 <method> <url> [headers..]", "", yargs =>
     yargs
       .positional("method", {
         choices: Object.keys(HttpMethod) as HttpMethod[],
@@ -66,17 +68,35 @@ const {
         },
         description: "The HTTP URL to request",
       })
+      .positional("headers", {
+        coerce: (arg: string[]) =>
+          arg
+            .map(header => {
+              const headerArray = header.split(":");
+              if (headerArray.length !== 2) {
+                throw new Error("Malformed HTTP header");
+              }
+              return headerArray;
+            })
+            .reduce<HttpHeaders>(
+              (acc, [key, value]) => ({ [key]: value, ...acc }),
+              {}
+            ),
+        description:
+          "The HTTP headers to send with the request, e.g. Content-Type: application/json",
+      })
       .demandOption(["method", "url"])
   ).argv;
 
 getStdin()
   .pipe(
     makeRequest(method, url, {
-      rejectUnauthorized: !!insecure,
       auth:
         authCredentials && authType
           ? { type: authType, credentials: authCredentials }
           : undefined,
+      headers,
+      rejectUnauthorized: !!insecure,
     })
   )
   .on("response", function(this: NodeJS.ReadableStream, headers) {

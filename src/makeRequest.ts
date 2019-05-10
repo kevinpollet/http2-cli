@@ -14,20 +14,20 @@ import { RequestOptions } from "./RequestOptions";
 export const makeRequest = (
   method: HttpMethod,
   url: URL,
-  options: RequestOptions = {}
+  { auth, headers, rejectUnauthorized }: RequestOptions = {}
 ): NodeJS.WritableStream => {
-  const auth = options.auth;
   const authCredentials =
     auth &&
     (auth.type === AuthenticationType.Bearer
       ? auth.credentials
       : Buffer.from(auth.credentials).toString("base64"));
 
-  const session = http2.connect(url);
+  const session = http2.connect(url, { rejectUnauthorized });
   const duplexStream = session.request({
     ":method": method,
     ":path": url.pathname + url.search,
     authorization: auth && `${auth.type} ${authCredentials}`,
+    ...headers,
   });
 
   return duplexStream

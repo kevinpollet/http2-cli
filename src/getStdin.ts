@@ -6,11 +6,11 @@
  */
 import { Readable } from "stream";
 
+const emptyReadable = new Readable({
+  read() {
+    this.push(null);
+  },
+});
+
 export const getStdin = (): NodeJS.ReadableStream =>
-  !process.stdin.isTTY
-    ? process.stdin
-    : new Readable({
-        read() {
-          this.push(null);
-        },
-      });
+  !process.stdin.isTTY ? process.stdin : emptyReadable;
