@@ -44,22 +44,6 @@ Options:
 
 Here are some command examples with the corresponding output:
 
-### GET request
-
-```shell
-$ http2 get https://nghttp2.org:443/httpbin/get\?query\=hello
-{
-  "args": {
-    "query": "hello"
-  },
-  "headers": {
-    "Host": "nghttp2.org:443"
-  },
-  "origin": "129.122.96.213",
-  "url": "https://nghttp2.org:443/httpbin/get?query=hello"
-}
-```
-
 ### Authenticated GET request
 
 ```shell
