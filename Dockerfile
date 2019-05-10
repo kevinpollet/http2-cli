@@ -2,7 +2,7 @@ FROM node:8-alpine as build
 WORKDIR /build
 COPY package*.json ./
 RUN npm ci
-COPY tsconfig.json .
+COPY tsconfig.build.json .
 COPY bin bin
 COPY src src
 RUN npm run build
@@ -19,4 +19,4 @@ COPY --from=build /build/bin bin/
 RUN npm link
 USER node
 ENTRYPOINT [ "/sbin/tini","--", "http2"]
-CMD [ "--version" ]
+CMD [ "--help" ]

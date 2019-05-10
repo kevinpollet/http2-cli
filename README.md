@@ -18,6 +18,7 @@ $ npx http2-cli --help
 
 - [Usage](#usage)
 - [Examples](#examples)
+- [Docker](#docker)
 - [License](#license)
 
 ## Usage
@@ -88,6 +89,43 @@ $ http2 post https://nghttp2.org:443/httpbin/post Content-Type:application/json 
   },
   "origin": "129.122.96.213",
   "url": "https://nghttp2.org:443/httpbin/post"
+}
+```
+
+## Docker
+
+For docker ❤️ you can run `http-cli` with docker. Currently, you'll have to build the docker image from the sources or to build your custom image. Here are the commands to build and run `http-cli` with docker:
+
+```shell
+$ git clone git@github.com:kevinpollet/http2-cli.git; cd http2-cli
+$ docker build . -t http2-cli:latest
+$ docker run --rm http2-cli:latest --version
+http2-cli/1.0.0-alpha.4 linux-x64 node-v8.16.0
+```
+
+With docker, it's also possible to use Unix redirection and pipes! Try the following commands:
+
+```shell
+$ docker run --rm -i http2-cli:latest post https://nghttp2.org/httpbin/post < foo.json
+{
+  "args": {},
+  "data": "{\n  \"bar\": \"baz\"\n}\n",
+  "files": {},
+  "form": {},
+  "headers": {
+    "Host": "nghttp2.org:443",
+    "Transfer-Encoding": "chunked"
+  },
+  "json": {
+    "bar": "baz"
+  },
+  "origin": "129.122.96.213",
+  "url": "https://nghttp2.org:443/httpbin/post"
+}
+
+$ echo -e '{ "hello": "world" }' | docker run --rm -i http2-cli:latest post https://nghttp2.org/httpbin/post | jq ".json"
+{
+  "hello": "world"
 }
 ```
 

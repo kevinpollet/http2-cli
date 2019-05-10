@@ -2,4 +2,4 @@
 !bin
 !src
 !package*.json
-!tsconfig.json
+!tsconfig.build.json
