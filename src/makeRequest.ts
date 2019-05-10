@@ -16,6 +16,9 @@ export const makeRequest = (
   url: URL,
   { auth, headers, rejectUnauthorized }: RequestOptions = {}
 ): NodeJS.WritableStream => {
+  const isAuthCredentialsInURL =
+    url.username.length > 0 && url.password.length > 0;
+
   const authCredentials =
     auth &&
     (auth.type === AuthenticationType.Bearer
@@ -26,7 +29,11 @@ export const makeRequest = (
   const duplexStream = session.request({
     ":method": method,
     ":path": url.pathname + url.search,
-    authorization: auth && `${auth.type} ${authCredentials}`,
+    authorization: isAuthCredentialsInURL
+      ? `Basic ${Buffer.from(`${url.username}:${url.password}`).toString(
+          "base64"
+        )}`
+      : auth && `${auth.type} ${authCredentials}`,
     ...headers,
   });
 
