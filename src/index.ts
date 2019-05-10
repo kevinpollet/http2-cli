@@ -33,7 +33,7 @@ const {
   .version(version)
   .wrap(null)
   .option("auth", {
-    description: "Authentication credentials",
+    description: "Specify the authentication credentials",
     requiresArg: true,
     string: true,
   })
@@ -41,11 +41,11 @@ const {
     choices: Object.keys(AuthenticationType),
     coerce: arg => arg as AuthenticationType,
     default: AuthenticationType.Basic,
-    description: "Authentication type",
+    description: "Specify the authentication mechanism",
     requiresArg: true,
   })
   .option("insecure", {
-    description: "Disable the server certificate verification",
+    description: "Disable the host SSL/TLS certificate verification",
     boolean: true,
   })
   .option("verbose", {

@@ -27,16 +27,16 @@ $ npx http2-cli --help
 http2 <method> <url> [headers..]
 
 Positionals:
-  method   HTTP method  [required] [choices: "DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATH"]
+  method   HTTP method  [required] [choices: "DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH"]
   url      HTTP URL to request  [required]
   headers  HTTP headers to send with the request, e.g. Content-Type: application/json
 
 Options:
   --help       Show help  [boolean]
   --version    Show version number  [boolean]
-  --auth       Authentication credentials  [string]
-  --auth-type  Authentication type  [choices: "Basic", "Bearer"] [default: "Basic"]
-  --insecure   Disable the server certificate verification  [boolean]
+  --auth       Specify the authentication credentials  [string]
+  --auth-type  Specify the authentication mechanism  [choices: "Basic", "Bearer"] [default: "Basic"]
+  --insecure   Disable the host SSL/TLS certificate verification  [boolean]
   --verbose    Display the HTTP response headers  [boolean]
 ```
 
