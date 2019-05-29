@@ -10,7 +10,7 @@ import { Arguments } from "yargs";
 declare module "yargs" {
   interface Argv<T = {}> {
     command<U>(
-      command: string | ReadonlyArray<string>,
+      command: string,
       description: string,
       builder?: (args: Argv<T>) => Argv<U>,
       handler?: (args: Arguments<U>) => void
