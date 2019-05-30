@@ -29,6 +29,7 @@ export const makeRequest = (
   const duplexStream = session.request({
     ":method": method,
     ":path": url.pathname + url.search,
+    "accept-encoding": "gzip, deflate",
     authorization: isAuthCredentialsInURL
       ? `Basic ${Buffer.from(`${url.username}:${url.password}`).toString(
           "base64"
