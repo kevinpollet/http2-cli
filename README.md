@@ -14,14 +14,6 @@ Since version `5.2.0`, a new package runner tool called [npx](https://medium.com
 $ npx http2-cli --help
 ```
 
-## Table of Contents
-
-- [Usage](#usage)
-- [Examples](#examples)
-- [Docker](#docker)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## Usage
 
 ```shell
