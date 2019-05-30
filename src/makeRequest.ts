@@ -5,8 +5,10 @@
  * found in the LICENSE.md file.
  */
 
-import http2 from "http2";
+import http2, { IncomingHttpHeaders } from "http2";
+import { PassThrough } from "stream";
 import { URL } from "url";
+import zlib from "zlib";
 import { HttpMethod } from "./HttpMethod";
 import { AuthenticationType } from "./AuthenticationType";
 import { RequestOptions } from "./RequestOptions";
@@ -16,6 +18,8 @@ export const makeRequest = (
   url: URL,
   { auth, headers, rejectUnauthorized }: RequestOptions = {}
 ): NodeJS.WritableStream => {
+  const passTroughStream = new PassThrough();
+
   const isAuthCredentialsInURL =
     url.username.length > 0 && url.password.length > 0;
 
@@ -38,7 +42,25 @@ export const makeRequest = (
     ...headers,
   });
 
-  return duplexStream
-    .once("error", () => session.destroy())
-    .once("end", () => session.destroy());
+  passTroughStream
+    .pipe(duplexStream)
+    .once("error", err => {
+      session.destroy();
+      passTroughStream.emit("error", err);
+    })
+    .once("end", () => {
+      session.destroy();
+      passTroughStream.emit("end");
+    })
+    .on("response", (headers: IncomingHttpHeaders) => {
+      const contentEncoding = headers["content-encoding"];
+      const responseStream =
+        contentEncoding === "gzip" || contentEncoding === "deflate"
+          ? duplexStream.pipe(zlib.createUnzip())
+          : duplexStream;
+
+      passTroughStream.emit("response", { headers, responseStream });
+    });
+
+  return passTroughStream;
 };

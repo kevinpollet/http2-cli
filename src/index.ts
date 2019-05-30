@@ -5,10 +5,8 @@
  * found in the LICENSE.md file.
  */
 
-import jsonColorizer from "json-colorizer";
 import yargs from "yargs";
 import { URL } from "url";
-import zlib from "zlib";
 import { httpHeadersToString } from "./httpHeadersToString";
 import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
@@ -19,6 +17,7 @@ import { streamToBuffer } from "./streamToBuffer";
 import { getStdin } from "./getStdin";
 import { errorHandler } from "./errorHandler";
 import { HttpHeaders } from "./HttpHeaders";
+import { colorizeJSON } from "./colorizeJSON";
 
 const {
   auth: authCredentials,
@@ -103,13 +102,7 @@ const requestOptions = {
 getStdin()
   .pipe(makeRequest(method, url, requestOptions))
   .on("error", errorHandler)
-  .on("response", function(this: NodeJS.ReadableStream, headers) {
-    const contentEncoding = headers["content-encoding"];
-    const stream =
-      contentEncoding === "gzip" || contentEncoding === "deflate"
-        ? this.pipe(zlib.createUnzip())
-        : this;
-
+  .on("response", ({ headers, responseStream }) => {
     if (verbose) {
       process.stderr.write(`${httpHeadersToString(headers)}\n\n`);
     }
@@ -118,13 +111,12 @@ getStdin()
       process.stdout.isTTY &&
       headers["content-type"] === "application/json"
     ) {
-      streamToBuffer(stream)
+      streamToBuffer(responseStream)
         .on("error", errorHandler)
-        .on("end", buffer => {
-          const options = { colors: { STRING_KEY: "blue" } };
-          process.stdout.write(jsonColorizer(buffer.toString(), options));
-        });
+        .on("end", buffer =>
+          process.stdout.write(colorizeJSON(buffer.toString()))
+        );
     } else {
-      stream.pipe(process.stdout);
+      responseStream.pipe(process.stdout);
     }
   });
