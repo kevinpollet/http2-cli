@@ -1,6 +1,6 @@
 # http2-cli &middot; [![Build Status](https://dev.azure.com/kevinpollet/http2-cli/_apis/build/status/kevinpollet.http2-cli?branchName=master)](https://dev.azure.com/kevinpollet/http2-cli/_build/latest?definitionId=2&branchName=master) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
 
-> 🥃 Modern and lightweight Command Line Interface for HTTP/2
+> Modern and lightweight Command Line Interface for HTTP/2
 
 ## Install
 
@@ -19,6 +19,7 @@ $ npx http2-cli --help
 - [Usage](#usage)
 - [Examples](#examples)
 - [Docker](#docker)
+- [Contributing](#contributing)
 - [License](#license)
 
 ## Usage
@@ -112,6 +113,12 @@ $ echo -e '{ "hello": "world" }' | docker run --rm -i http2-cli:latest post http
   "hello": "world"
 }
 ```
+
+## Contributing
+
+✨Contributions are welcome ✨
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information and how to get started.
 
 ## License
 
