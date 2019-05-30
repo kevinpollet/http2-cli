@@ -18,7 +18,7 @@ describe("httpHeadersToString", () => {
     const headersString = httpHeadersToString(headers);
 
     expect(headersString).toEqual(
-      chalk`{magenta One-Header}: first\n{magenta Second-Header}: second\n{magenta :third}: [third, third2]`
+      chalk`{magenta :third}: [third, third2]\n{magenta One-Header}: first\n{magenta Second-Header}: second`
     );
   });
 });

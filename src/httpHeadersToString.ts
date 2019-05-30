@@ -11,14 +11,15 @@ import { isArray } from "util";
 
 export const httpHeadersToString = (headers: HttpHeaders): string =>
   Object.entries(headers)
-    .map(([header, value]) => {
-      const valueString =
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([key, value]) => {
+      const formattedValue =
         value && isArray(value) ? `[${value.join(", ")}]` : `${value}`;
-      const headerString = header.replace(
+      const formattedKey = key.replace(
         /[^-]+-?/g,
         m => `${m[0].toUpperCase()}${m.slice(1).toLowerCase()}`
       );
 
-      return chalk`{magenta ${headerString}}: ${valueString}`;
+      return chalk`{magenta ${formattedKey}}: ${formattedValue}`;
     })
     .join("\n");
