@@ -104,7 +104,11 @@ getStdin()
   .on("error", errorHandler)
   .on("response", ({ headers, responseStream }) => {
     if (verbose) {
-      process.stderr.write(`${httpHeadersToString(headers)}\n\n`);
+      const outputStream = !process.stdout.isTTY
+        ? process.stderr
+        : process.stdout;
+
+      outputStream.write(`${httpHeadersToString(headers)}\n\n`);
     }
 
     if (
