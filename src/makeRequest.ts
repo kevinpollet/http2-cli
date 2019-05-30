@@ -9,12 +9,12 @@ import http2, { IncomingHttpHeaders } from "http2";
 import { PassThrough } from "stream";
 import { URL } from "url";
 import zlib from "zlib";
-import { HttpMethod } from "./HttpMethod";
+import { HTTPMethod } from "./HTTPMethod";
 import { AuthenticationType } from "./AuthenticationType";
 import { RequestOptions } from "./RequestOptions";
 
 export const makeRequest = (
-  method: HttpMethod,
+  method: HTTPMethod,
   url: URL,
   { auth, headers, rejectUnauthorized }: RequestOptions = {}
 ): NodeJS.WritableStream => {

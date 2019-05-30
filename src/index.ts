@@ -10,13 +10,13 @@ import { URL } from "url";
 import { httpHeadersToString } from "./httpHeadersToString";
 import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
-import { HttpMethod } from "./HttpMethod";
+import { HTTPMethod } from "./HTTPMethod";
 import { makeRequest } from "./makeRequest";
 import { isHttpURL } from "./isHttpURL";
 import { streamToBuffer } from "./streamToBuffer";
 import { getStdin } from "./getStdin";
 import { errorHandler } from "./errorHandler";
-import { HttpHeaders } from "./HttpHeaders";
+import { HTTPHeaders } from "./HTTPHeaders";
 import { colorizeJSON } from "./colorizeJSON";
 
 const {
@@ -58,8 +58,8 @@ const {
   .command("$0 <method> <url> [headers..]", "", yargs =>
     yargs
       .positional("method", {
-        choices: Object.keys(HttpMethod) as HttpMethod[],
-        coerce: (arg: string) => arg.toUpperCase() as HttpMethod,
+        choices: Object.keys(HTTPMethod) as HTTPMethod[],
+        coerce: (arg: string) => arg.toUpperCase() as HTTPMethod,
         description: "HTTP method",
       })
       .positional("url", {
@@ -81,7 +81,7 @@ const {
               }
               return headerArray;
             })
-            .reduce<HttpHeaders>(
+            .reduce<HTTPHeaders>(
               (acc, [key, value]) => ({ [key]: value, ...acc }),
               {}
             ),

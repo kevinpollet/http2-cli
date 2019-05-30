@@ -6,10 +6,10 @@
  */
 
 import chalk from "chalk";
-import { HttpHeaders } from "./HttpHeaders";
+import { HTTPHeaders } from "./HTTPHeaders";
 import { isArray } from "util";
 
-export const httpHeadersToString = (headers: HttpHeaders): string =>
+export const httpHeadersToString = (headers: HTTPHeaders): string =>
   Object.entries(headers)
     .sort((a, b) => a[0].localeCompare(b[0]))
     .map(([key, value]) => {

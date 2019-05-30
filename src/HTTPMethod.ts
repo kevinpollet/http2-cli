@@ -5,6 +5,12 @@
  * found in the LICENSE.md file.
  */
 
-export interface HttpHeaders {
-  [key: string]: string | string[] | undefined;
+export enum HTTPMethod {
+  DELETE = "DELETE",
+  GET = "GET",
+  HEAD = "HEAD",
+  OPTIONS = "OPTIONS",
+  POST = "POST",
+  PUT = "PUT",
+  PATCH = "PATCH",
 }

@@ -6,13 +6,13 @@
  */
 
 import { AuthenticationType } from "./AuthenticationType";
-import { HttpHeaders } from "./HttpHeaders";
+import { HTTPHeaders } from "./HTTPHeaders";
 
 export interface RequestOptions {
   auth?: {
     type: AuthenticationType;
     credentials: string;
   };
-  headers?: HttpHeaders;
+  headers?: HTTPHeaders;
   rejectUnauthorized?: boolean;
 }
