@@ -12,7 +12,6 @@ import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
 import { HTTPMethod } from "./HTTPMethod";
 import { request } from "./request";
-import { isHttpURL } from "./isHttpURL";
 import { streamToBuffer } from "./streamToBuffer";
 import { getStdin } from "./getStdin";
 import { errorHandler } from "./errorHandler";
@@ -64,8 +63,8 @@ const {
       })
       .positional("url", {
         coerce: (url: string) => {
-          if (!isHttpURL(url)) {
-            throw new Error("Unsupported URL format");
+          if (!url.match("(http:|https:).*")) {
+            throw new Error("Unsupported URL protocol");
           }
           return new URL(url);
         },
