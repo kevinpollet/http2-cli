@@ -11,7 +11,7 @@ import { httpHeadersToString } from "./httpHeadersToString";
 import { AuthenticationType } from "./AuthenticationType";
 import { version } from "./version";
 import { HTTPMethod } from "./HTTPMethod";
-import { makeRequest } from "./makeRequest";
+import { request } from "./request";
 import { isHttpURL } from "./isHttpURL";
 import { streamToBuffer } from "./streamToBuffer";
 import { getStdin } from "./getStdin";
@@ -100,7 +100,7 @@ const requestOptions = {
 };
 
 getStdin()
-  .pipe(makeRequest(method, url, requestOptions))
+  .pipe(request(method, url, requestOptions))
   .on("error", errorHandler)
   .on("response", ({ headers, responseStream }) => {
     if (verbose) {

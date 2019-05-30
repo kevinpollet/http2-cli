@@ -13,7 +13,7 @@ import { HTTPMethod } from "./HTTPMethod";
 import { AuthenticationType } from "./AuthenticationType";
 import { RequestOptions } from "./RequestOptions";
 
-export const makeRequest = (
+export const request = (
   method: HTTPMethod,
   url: URL,
   { auth, headers, rejectUnauthorized }: RequestOptions = {}
