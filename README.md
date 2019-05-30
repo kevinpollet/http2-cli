@@ -22,7 +22,7 @@ http2 <method> <url> [headers..]
 Positionals:
   method   HTTP method  [required] [choices: "DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH"]
   url      HTTP URL to request  [required]
-  headers  HTTP headers to send with the request, e.g. Content-Type: application/json
+  headers  HTTP headers to send with the request, e.g. Content-Type:application/json
 
 Options:
   --help       Show help  [boolean]

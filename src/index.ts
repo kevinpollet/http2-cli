@@ -86,7 +86,7 @@ const {
               {}
             ),
         description:
-          "HTTP headers to send with the request, e.g. Content-Type: application/json",
+          "HTTP headers to send with the request, e.g. Content-Type:application/json",
       })
       .demandOption(["method", "url"])
   ).argv;
