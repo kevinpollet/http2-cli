@@ -26,6 +26,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "clean": "rimraf lib coverage",
+    "docker:build": "scripts/docker-build.js",
+    "docker:publish": "scripts/docker-publish.js",
     "format": "prettier --write '**/*.{ts,json,md,yml,js}' '!{lib,coverage}/**/*'",
     "lint:src": "eslint 'src/**'",
     "lint:test": "eslint 'test/**'",
@@ -48,12 +50,14 @@
     "@typescript-eslint/parser": "1.9.0",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.3.0",
+    "execa": "1.0.0",
     "husky": "2.3.0",
     "jest": "24.8.0",
     "lint-staged": "8.1.7",
     "np": "5.0.2",
     "prettier": "1.17.1",
     "rimraf": "2.6.3",
+    "semver": "6.1.1",
     "ts-jest": "24.0.2",
     "typescript": "3.5.1"
   },
@@ -91,6 +95,16 @@
         "files": [
           "*.test.ts"
         ]
+      },
+      {
+        "files": [
+          "scripts/*.js"
+        ],
+        "rules": {
+          "@typescript-eslint/no-var-requires": [
+            0
+          ]
+        }
       }
     ]
   },
