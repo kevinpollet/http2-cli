@@ -11,7 +11,7 @@ pr:
       - master
 
 jobs:
-  - job: Build
+  - job: build
     pool:
       vmImage: ubuntu-16.04
     strategy:
@@ -50,9 +50,46 @@ jobs:
         displayName: Publish build artifact
         condition: and(eq(variables['node_version'], '8.x'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
 
-  - job: Deploy
-    dependsOn: Build
-    condition: and(succeeded('Build'), contains(variables['Build.SourceBranch'], 'refs/tags/'))
+  - job: docker_publish
+    displayName: Publish docker image
+    dependsOn: build
+    condition: and(succeeded('build'), contains(variables['build.SourceBranch'], 'refs/tags/'))
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+      - checkout: none
+
+      - task: DownloadBuildArtifacts@0
+        displayName: Download build artifact
+        inputs:
+          artifactName: drop
+
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: $(System.ArtifactsDirectory)/**/*.zip
+          destinationFolder: $(System.ArtifactsDirectory)/deploy
+
+      - task: NodeTool@0
+        displayName: Install Node.js
+        inputs:
+          versionSpec: 8.x
+
+      - task: Docker@2
+        displayName: Login to Docker Hub
+        inputs:
+          command: login
+          containerRegistry: kevinpollet-docker-hub-connection
+
+      - script: npm run docker:build --prefix $(System.ArtifactsDirectory)/deploy
+        displayName: Build docker image
+
+      - script: npm run docker:publish --prefix $(System.ArtifactsDirectory)/deploy
+        displayName: Publish docker image
+
+  - job: npm_publish
+    displayName: Publish npm package
+    dependsOn: build
+    condition: and(succeeded('build'), contains(variables['build.SourceBranch'], 'refs/tags/'))
     pool:
       vmImage: ubuntu-16.04
     steps:
