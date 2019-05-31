@@ -25,16 +25,18 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "clean": "rimraf lib coverage",
+    "clean": "rimraf dist lib coverage",
     "docker:build": "scripts/docker-build.js",
     "docker:publish": "scripts/docker-publish.js",
     "format": "prettier --write '{bin,src,test,scripts}/**/*' '*.{json,md,yml}'",
     "lint:src": "eslint 'src/**'",
     "lint:test": "eslint 'test/**'",
     "prebuild": "rimraf lib && npm run lint:src",
+    "prepkg": "rimraf dist && npm run build",
     "pretest": "rimraf coverage && npm run lint:test",
-    "release": "np",
-    "test": "jest test --coverage --collectCoverageFrom='src/**' --collectCoverageFrom='!src/@types/**'"
+    "release": "np --no-publish --no-yarn",
+    "test": "jest test --preset ts-jest --coverage --collectCoverageFrom='src/**' --collectCoverageFrom='!src/@types/**'",
+    "pkg": "pkg . --targets node12-linux,node12-macos,node12-win --out-path dist"
   },
   "dependencies": {
     "chalk": "2.4.2",
@@ -55,18 +57,12 @@
     "jest": "24.8.0",
     "lint-staged": "8.1.7",
     "np": "5.0.2",
+    "pkg": "4.4.0",
     "prettier": "1.17.1",
     "rimraf": "2.6.3",
     "semver": "6.1.1",
     "ts-jest": "24.0.2",
     "typescript": "3.5.1"
-  },
-  "jest": {
-    "preset": "ts-jest"
-  },
-  "np": {
-    "publish": false,
-    "yarn": false
   },
   "eslintConfig": {
     "env": {
