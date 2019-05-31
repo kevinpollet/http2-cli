@@ -75,7 +75,7 @@ For docker ❤️ you can run `http2-cli` with docker. You can use a prebuilt do
 
 ```shell
 $ docker run --rm kevinpollet/http2-cli:latest --version
-http2-cli/1.0.0-alpha.4 linux-x64 node-v8.16.0
+http2-cli/1.1.0 linux-x64 node-v12.3.1
 ```
 
 With docker, it's also possible to use Unix redirections and pipes! Try the following commands:
