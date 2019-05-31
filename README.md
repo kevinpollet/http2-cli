@@ -4,6 +4,8 @@
 
 ## Install
 
+### npm
+
 ```shell
 $ npm install -g http2-cli
 ```
@@ -12,6 +14,12 @@ Since version `5.2.0`, a new package runner tool called [npx](https://medium.com
 
 ```shell
 $ npx http2-cli --help
+```
+
+### Yarn
+
+```shell
+$ yarn global add http2-cli
 ```
 
 ## Usage
