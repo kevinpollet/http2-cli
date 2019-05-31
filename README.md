@@ -37,7 +37,7 @@ Options:
 
 Here are some command examples with the corresponding output:
 
-### Authenticated GET request
+### GET request with basic authentication
 
 ```shell
 $ http2 get https://nghttp2.org:443/httpbin/basic-auth/test/test --auth test:test
@@ -69,7 +69,7 @@ $ http2 post https://nghttp2.org:443/httpbin/post Content-Type:application/json 
 }
 ```
 
-## Docker
+## ️️Docker
 
 For docker ❤️ you can run `http2-cli` with docker. Currently, you'll have to build the docker image from the sources or to build your custom image. Here are the commands to build and run `http2-cli` with docker:
 
@@ -80,7 +80,7 @@ $ docker run --rm http2-cli:latest --version
 http2-cli/1.0.0-alpha.4 linux-x64 node-v8.16.0
 ```
 
-With docker, it's also possible to use Unix redirection and pipes! Try the following commands:
+With docker, it's also possible to use Unix redirections and pipes! Try the following commands:
 
 ```shell
 $ docker run --rm -i http2-cli:latest post https://nghttp2.org/httpbin/post < foo.json
