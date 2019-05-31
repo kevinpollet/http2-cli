@@ -31,8 +31,8 @@
     "format": "prettier --write '{bin,src,test,scripts}/**/*' '*.{json,md,yml}'",
     "lint:src": "eslint 'src/**'",
     "lint:test": "eslint 'test/**'",
-    "prebuild": "npm run clean && npm run lint:src",
-    "pretest": "npm run clean lint:test",
+    "prebuild": "rimraf lib && npm run lint:src",
+    "pretest": "rimraf coverage && npm run lint:test",
     "release": "np",
     "test": "jest test --coverage --collectCoverageFrom='src/**' --collectCoverageFrom='!src/@types/**'"
   },
