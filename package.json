@@ -28,7 +28,7 @@
     "clean": "rimraf lib coverage",
     "docker:build": "scripts/docker-build.js",
     "docker:publish": "scripts/docker-publish.js",
-    "format": "prettier --write '**/*.{ts,json,md,yml,js}' '!{lib,coverage}/**/*'",
+    "format": "prettier --write '{bin,src,test,scripts}/**/*' '*.{json,md,yml}'",
     "lint:src": "eslint 'src/**'",
     "lint:test": "eslint 'test/**'",
     "prebuild": "npm run clean && npm run lint:src",
