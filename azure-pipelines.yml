@@ -5,11 +5,6 @@ trigger:
       - master
       - refs/tags/*
 
-pr:
-  branches:
-    include:
-      - master
-
 jobs:
   - job: build
     pool:
