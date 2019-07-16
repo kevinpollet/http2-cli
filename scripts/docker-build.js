@@ -23,5 +23,5 @@ subprocess.stdout.pipe(process.stdout);
 
 subprocess.catch(err => {
   process.stderr.write(`${err.message}\n`);
-  process.exit(err.code);
+  process.exit(err.exitCode);
 });

@@ -16,5 +16,5 @@ const subprocesses = dockerTags.map(tagName =>
 
 Promise.all(subprocesses).catch(err => {
   process.stderr.write(`${err.message}\n`);
-  process.exit(err.code);
+  process.exit(err.exitCode);
 });
