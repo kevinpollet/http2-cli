@@ -7,7 +7,7 @@
 import { Readable } from "stream";
 
 const emptyReadable = new Readable({
-  read() {
+  read(): void {
     this.push(null);
   },
 });

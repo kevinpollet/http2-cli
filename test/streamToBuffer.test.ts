@@ -12,7 +12,7 @@ describe("streamToBuffer", () => {
   it("should emit an end event with the corresponding Buffer", done => {
     const data = "dummy";
     const readable = new Readable({
-      read() {
+      read(): void {
         this.push(Buffer.from(data));
         this.push(null);
       },
@@ -27,7 +27,7 @@ describe("streamToBuffer", () => {
   it("should emit an error event with the corresponding error", done => {
     const error = new Error("dummy");
     const readable = new Readable({
-      read() {
+      read(): void {
         this.emit("error", error);
       },
     });

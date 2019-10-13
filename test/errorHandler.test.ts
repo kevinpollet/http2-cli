@@ -12,8 +12,8 @@ describe("errorHandler", () => {
     const writeFn = jest.fn();
     const exitFn = jest.fn<never, unknown[]>();
 
-    process.stderr.write = writeFn;
-    process.exit = exitFn;
+    process.stderr.write = writeFn; // eslint-disable-line @typescript-eslint/unbound-method
+    process.exit = exitFn; // eslint-disable-line @typescript-eslint/unbound-method
 
     errorHandler(new Error("message"));
 

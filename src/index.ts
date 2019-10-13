@@ -63,7 +63,7 @@ const {
       })
       .positional("url", {
         coerce: (url: string) => {
-          if (!url.match("(http:|https:).*")) {
+          if (!RegExp("(http:|https:).*").exec(url)) {
             throw new Error("Unsupported URL protocol");
           }
           return new URL(url);

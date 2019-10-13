@@ -32,7 +32,7 @@
     "lint:src": "eslint 'src/**'",
     "lint:test": "eslint 'test/**'",
     "prebuild": "rimraf lib && npm run lint:src",
-    "prepkg": "rimraf dist && npm run build",
+    "prepare": "rimraf dist && npm run build",
     "pretest": "rimraf coverage && npm run lint:test",
     "release": "np --no-publish --no-yarn",
     "test": "jest test --preset ts-jest --coverage --collectCoverageFrom='src/**' --collectCoverageFrom='!src/@types/**'",
@@ -41,53 +41,47 @@
   "dependencies": {
     "chalk": "2.4.2",
     "json-colorizer": "2.2.1",
-    "yargs": "13.3.0"
+    "yargs": "14.2.0"
   },
   "devDependencies": {
     "@kevinpollet/tsconfig": "0.1.0",
-    "@types/jest": "24.0.15",
+    "@types/jest": "24.0.18",
     "@types/node": "8.10.48",
-    "@types/yargs": "13.0.0",
-    "@typescript-eslint/eslint-plugin": "1.12.0",
-    "@typescript-eslint/parser": "1.12.0",
-    "eslint": "5.16.0",
-    "eslint-config-prettier": "4.3.0",
-    "execa": "2.0.3",
-    "husky": "3.0.0",
-    "jest": "24.8.0",
-    "lint-staged": "9.2.0",
-    "np": "5.0.3",
+    "@types/yargs": "13.0.3",
+    "@typescript-eslint/eslint-plugin": "2.3.3",
+    "@typescript-eslint/parser": "2.3.3",
+    "eslint": "6.5.1",
+    "eslint-config-prettier": "6.4.0",
+    "execa": "2.1.0",
+    "husky": "3.0.9",
+    "jest": "24.9.0",
+    "lint-staged": "9.4.2",
+    "np": "5.1.1",
     "pkg": "4.4.0",
     "prettier": "1.18.2",
-    "rimraf": "2.6.3",
-    "semver": "6.2.0",
-    "ts-jest": "24.0.2",
-    "typescript": "3.5.3"
+    "rimraf": "3.0.0",
+    "semver": "6.3.0",
+    "ts-jest": "24.1.0",
+    "typescript": "3.6.4"
   },
   "eslintConfig": {
-    "env": {
-      "es6": true,
-      "node": true
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": "./tsconfig.json"
     },
+    "plugins": [
+      "@typescript-eslint"
+    ],
     "extends": [
       "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking",
       "prettier",
       "prettier/@typescript-eslint"
     ],
-    "rules": {
-      "@typescript-eslint/explicit-function-return-type": [
-        2,
-        {
-          "allowExpressions": "true"
-        }
-      ]
-    },
     "overrides": [
       {
-        "env": {
-          "jest": true
-        },
         "files": [
           "*.test.ts"
         ]
@@ -95,12 +89,7 @@
       {
         "files": [
           "scripts/*.js"
-        ],
-        "rules": {
-          "@typescript-eslint/no-var-requires": [
-            0
-          ]
-        }
+        ]
       }
     ]
   },
