@@ -89,7 +89,7 @@ http2-cli/1.1.0 linux-x64 node-v12.3.1
 With docker, it's also possible to use Unix redirections and pipes! Try the following commands:
 
 ```shell
-$ docker run --rm -i http2-cli:latest post https://nghttp2.org/httpbin/post < foo.json
+$ docker run --rm -i kevinpollet/http2-cli:latest post https://nghttp2.org/httpbin/post < foo.json
 {
   "args": {},
   "data": "{\n  \"bar\": \"baz\"\n}\n",
@@ -106,7 +106,7 @@ $ docker run --rm -i http2-cli:latest post https://nghttp2.org/httpbin/post < fo
   "url": "https://nghttp2.org:443/httpbin/post"
 }
 
-$ echo -e '{ "hello": "world" }' | docker run --rm -i http2-cli:latest post https://nghttp2.org/httpbin/post | jq ".json"
+$ echo -e '{ "hello": "world" }' | docker run --rm -i kevinpollet/http2-cli:latest post https://nghttp2.org/httpbin/post | jq ".json"
 {
   "hello": "world"
 }
