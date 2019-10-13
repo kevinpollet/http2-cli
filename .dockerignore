@@ -3,3 +3,4 @@
 !src
 !package*.json
 !tsconfig.build.json
+!tsconfig.json

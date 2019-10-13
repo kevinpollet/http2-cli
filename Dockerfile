@@ -2,7 +2,7 @@ FROM node:12-alpine as builder
 WORKDIR /build
 COPY package*.json ./
 RUN npm ci
-COPY tsconfig.build.json .
+COPY tsconfig*.json ./
 COPY bin bin
 COPY src src
 RUN npm run build
