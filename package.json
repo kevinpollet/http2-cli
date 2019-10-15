@@ -30,7 +30,7 @@
     "format": "prettier --write '{bin,src,test,scripts}/**/*' '*.{json,md,yml}'",
     "format:check": "prettier --check '{bin,src,test,scripts}/**/*' '*.{json,md,yml}'",
     "lint": "eslint '{src,test}/**'",
-    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "release": "np --no-publish --no-yarn",
     "test": "jest test --preset ts-jest",
     "pkg": "rm -rf dist && pkg . --targets node12-linux,node12-macos,node12-win --out-path dist"
