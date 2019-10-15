@@ -109,9 +109,11 @@ $ echo -e '{ "hello": "world" }' | docker run --rm -i kevinpollet/http2-cli:late
 
 ## Contributing
 
-✨Contributions are welcome ✨
+Contributions are welcome!
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information and how to get started.
+Want to file a bug, request a feature or contribute some code?
+
+Check out the [contribution guidelines](./CONTRIBUTING.md).
 
 ## License
 
