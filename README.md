@@ -4,22 +4,17 @@
 
 ## Install
 
-### npm
+**npm**
 
 ```shell
-$ npm install -g http2-cli
+$ npx http2-cli             # Use it once.
+$ npm install -g http2-cli  # Install globally.
 ```
 
-Since version `5.2.0`, a new package runner tool called [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) is shipped with npm. With this new tool you can run any node package binary from the command line without installing it globally first. So you can run `http2-cli` with the following command line:
+**yarn**
 
 ```shell
-$ npx http2-cli --help
-```
-
-### Yarn
-
-```shell
-$ yarn global add http2-cli
+$ yarn global add http2-cli # Install globally.
 ```
 
 ## Usage
