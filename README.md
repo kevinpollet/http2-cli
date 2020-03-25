@@ -7,14 +7,14 @@
 **npm**
 
 ```shell
-$ npx http2-cli             # Use it once.
-$ npm install -g http2-cli  # Install globally.
+npx http2-cli             # Use it once.
+npm install -g http2-cli  # Install globally.
 ```
 
 **yarn**
 
 ```shell
-$ yarn global add http2-cli # Install globally.
+yarn global add http2-cli # Install globally.
 ```
 
 ## Usage
@@ -43,7 +43,8 @@ Here are some command examples with the corresponding output:
 ### GET request with basic authentication
 
 ```shell
-$ http2 get https://nghttp2.org:443/httpbin/basic-auth/test/test --auth test:test
+http2 get https://nghttp2.org:443/httpbin/basic-auth/test/test --auth test:test
+
 {
   "authenticated": true,
   "user": "test"
@@ -53,7 +54,8 @@ $ http2 get https://nghttp2.org:443/httpbin/basic-auth/test/test --auth test:tes
 ### POST request with redirected input
 
 ```shell
-$ http2 post https://nghttp2.org:443/httpbin/post Content-Type:application/json < foo.json
+http2 post https://nghttp2.org:443/httpbin/post Content-Type:application/json < foo.json
+
 {
   "args": {},
   "data": "{\n  \"bar\": \"baz\"\n}\n",
@@ -77,14 +79,16 @@ $ http2 post https://nghttp2.org:443/httpbin/post Content-Type:application/json 
 For docker ❤️ you can run `http2-cli` with docker. You can use a prebuilt docker image or build your own. For example the following command run the latest prebuilt docker image of `http2-cli`:
 
 ```shell
-$ docker run --rm kevinpollet/http2-cli:latest --version
+docker run --rm kevinpollet/http2-cli:latest --version
+
 http2-cli/1.1.0 linux-x64 node-v12.3.1
 ```
 
 With docker, it's also possible to use Unix redirections and pipes! Try the following commands:
 
 ```shell
-$ docker run --rm -i kevinpollet/http2-cli:latest post https://nghttp2.org/httpbin/post < foo.json
+docker run --rm -i kevinpollet/http2-cli:latest post https://nghttp2.org/httpbin/post < foo.json
+
 {
   "args": {},
   "data": "{\n  \"bar\": \"baz\"\n}\n",
@@ -101,7 +105,8 @@ $ docker run --rm -i kevinpollet/http2-cli:latest post https://nghttp2.org/httpb
   "url": "https://nghttp2.org:443/httpbin/post"
 }
 
-$ echo -e '{ "hello": "world" }' | docker run --rm -i kevinpollet/http2-cli:latest post https://nghttp2.org/httpbin/post | jq ".json"
+echo -e '{ "hello": "world" }' | docker run --rm -i kevinpollet/http2-cli:latest post https://nghttp2.org/httpbin/post | jq ".json"
+
 {
   "hello": "world"
 }
